@@ -27,7 +27,7 @@
                     <td>${discount.id}</td>
                     <td>${discount.name}</td>
                     <td>${discount.type == 'PERCENT' ? 'Percentage' : 'Fixed Amount'}</td>
-                    <td>${discount.type == 'PERCENT' ? discount.value + '%' : discount.value}</td>
+                    <td><c:if test="${discount.type == 'PERCENT'}">${discount.value}%</c:if><c:if test="${discount.type != 'PERCENT'}">${discount.value}</c:if></td>
                     <td>${discount.start}</td>
                     <td>${discount.end}</td>
                 </tr>
