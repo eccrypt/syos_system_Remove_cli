@@ -7,7 +7,6 @@ import com.syos.model.Discount;
 import com.syos.model.Product;
 import com.syos.repository.DiscountRepository;
 import com.syos.singleton.InventoryManager;
-import com.syos.strategy.ExpiryAwareFifoStrategy;
 import com.syos.util.CommonVariables;
 
 public class DiscountPricingStrategy implements PricingStrategy {

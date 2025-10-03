@@ -44,7 +44,7 @@ import com.syos.service.StockAlertService;
 public class InventoryServlet extends HttpServlet {
     private final InventoryManager inventoryManager;
     private final Map<String, Command> commandMap = new HashMap<>();
-    private final Scanner scanner = new Scanner(System.in); // Note: for commands that use scanner, may need adjustment
+    private final Scanner scanner = new Scanner(System.in); 
 
     public InventoryServlet() {
         ProductRepository productRepository = new ProductRepository();
@@ -96,7 +96,6 @@ public class InventoryServlet extends HttpServlet {
             case "viewProducts":
                 handleViewProducts(request, response);
                 break;
-            // Add other cases as needed
             default:
                 request.setAttribute("error", "Unknown action.");
                 doGet(request, response);
@@ -108,8 +107,6 @@ public class InventoryServlet extends HttpServlet {
         String name = request.getParameter("name");
         String code = request.getParameter("code");
         String priceStr = request.getParameter("price");
-        String category = request.getParameter("category");
-
         try {
             double price = Double.parseDouble(priceStr);
             ProductService productService = new ProductService();
