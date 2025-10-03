@@ -9,6 +9,7 @@
     <h1>All Products with Discounts</h1>
     <a href="inventory">Back to Inventory Menu</a>
 
+    <c:set var="hasDiscounts" value="false" />
     <table border="1">
         <tr>
             <th>Product Code</th>
@@ -21,6 +22,7 @@
         <c:forEach var="product" items="${products}">
             <c:set var="discounts" value="${discountRepository.findDiscountsByProductCode(product.code, today)}" />
             <c:if test="${not empty discounts}">
+                <c:set var="hasDiscounts" value="true" />
                 <c:forEach var="discount" items="${discounts}">
                     <tr>
                         <td>${product.code}</td>
@@ -34,5 +36,8 @@
             </c:if>
         </c:forEach>
     </table>
+    <c:if test="${not hasDiscounts}">
+        <p>No products with active discounts found.</p>
+    </c:if>
 </body>
 </html>
