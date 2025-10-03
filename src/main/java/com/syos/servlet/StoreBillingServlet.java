@@ -150,22 +150,39 @@ public class StoreBillingServlet extends HttpServlet {
                 return;
             }
 
-            int serialNumber = billRepository.nextSerial();
-            Bill bill = new Bill.BillBuilder(serialNumber, billItems).withCashTendered(cashTendered).build();
+            // Submit payment processing to async queue
+            processPaymentAsync(request, billItems, cashTendered, totalDue);
 
-            billRepository.save(bill);
-
-            for (BillItem item : billItems) {
-                inventoryManager.deductFromShelf(item.getProduct().getCode(), item.getQuantity());
-            }
-
-            request.setAttribute("bill", bill);
+            // Clear session immediately and show processing message
             session.removeAttribute("billItems");
+            request.setAttribute("processing", true);
+            request.setAttribute("totalAmount", totalDue);
+            request.setAttribute("cashTendered", cashTendered);
+            request.setAttribute("change", cashTendered - totalDue);
             request.getRequestDispatcher("/billReceipt.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid cash amount.");
             doGet(request, response);
         }
+    }
+
+    private void processPaymentAsync(HttpServletRequest request, List<BillItem> billItems,
+                                   double cashTendered, double totalDue) {
+        // Submit to async processing queue
+        AsyncProcessorManager asyncManager = AsyncProcessorManager.getInstance();
+
+        // Prepare bill data for async processing
+        java.util.Map<String, Object> billData = new java.util.HashMap<>();
+        billData.put("action", "PROCESS_BILL");
+        billData.put("billItems", billItems);
+        billData.put("cashTendered", cashTendered);
+        billData.put("totalDue", totalDue);
+        billData.put("userId", request.getSession().getAttribute("userId"));
+        billData.put("sessionId", request.getSession().getId());
+
+        // Submit async request (fire and forget for now)
+        asyncManager.submitRequest("BILLING", billData);
     }
 
     private void newBill(HttpServletRequest request, HttpServletResponse response)

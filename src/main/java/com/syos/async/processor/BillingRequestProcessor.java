@@ -5,6 +5,7 @@ import com.syos.async.AsyncResponse;
 import com.syos.async.RequestProcessor;
 import com.syos.service.StoreBillingService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,17 +51,45 @@ public class BillingRequestProcessor implements RequestProcessor {
     private AsyncResponse processBill(AsyncRequest request, Map<String, Object> params, long startTime) {
         try {
             // Extract bill processing parameters
-            String billData = (String) params.get("billData");
+            @SuppressWarnings("unchecked")
+            java.util.List<com.syos.model.BillItem> billItems = (java.util.List<com.syos.model.BillItem>) params.get("billItems");
+            Double cashTendered = (Double) params.get("cashTendered");
+            Double totalDue = (Double) params.get("totalDue");
 
-            // Process the bill asynchronously
-            // This is a simplified example - in real implementation you'd parse the bill data
-            // and call the appropriate billing service methods
+            if (billItems == null || billItems.isEmpty()) {
+                return AsyncResponse.error(request.getRequestId(),
+                    "No bill items provided").processingTime(System.currentTimeMillis() - startTime).build();
+            }
 
-            // Simulate processing time
-            Thread.sleep(100);
+            // Generate bill serial number and create bill
+            com.syos.repository.BillingRepository billRepository = new com.syos.repository.BillingRepository();
+            int serialNumber = billRepository.nextSerial();
+
+            com.syos.model.Bill bill = new com.syos.model.Bill.BillBuilder(serialNumber, billItems)
+                .withCashTendered(cashTendered)
+                .build();
+
+            // Save bill to database
+            billRepository.save(bill);
+
+            // Deduct from inventory
+            com.syos.singleton.InventoryManager inventoryManager =
+                com.syos.singleton.InventoryManager.getInstance(new com.syos.strategy.ExpiryAwareFifoStrategy());
+
+            for (com.syos.model.BillItem item : billItems) {
+                inventoryManager.deductFromShelf(item.getProduct().getCode(), item.getQuantity());
+            }
+
+            // Simulate additional processing time
+            Thread.sleep(50);
 
             return AsyncResponse.success(request.getRequestId(),
-                Map.of("status", "processed", "billId", "BILL-" + System.currentTimeMillis()))
+                Map.of("status", "processed",
+                       "billId", "BILL-" + serialNumber,
+                       "serialNumber", serialNumber,
+                       "totalAmount", totalDue,
+                       "cashTendered", cashTendered,
+                       "change", cashTendered - totalDue))
                 .processingTime(System.currentTimeMillis() - startTime).build();
 
         } catch (Exception e) {
