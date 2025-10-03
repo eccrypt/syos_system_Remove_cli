@@ -1,7 +1,10 @@
 package com.syos.servlet;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -39,6 +42,12 @@ import com.syos.util.CommonVariables;
 
 import com.syos.service.ProductService;
 import com.syos.service.StockAlertService;
+import com.syos.service.DiscountCreationService;
+
+import com.syos.model.StockBatch;
+import com.syos.model.Discount;
+import com.syos.model.Product;
+import com.syos.enums.DiscountType;
 
 @WebServlet("/inventory")
 public class InventoryServlet extends HttpServlet {
@@ -96,6 +105,48 @@ public class InventoryServlet extends HttpServlet {
             case "viewProducts":
                 handleViewProducts(request, response);
                 break;
+            case "updateProduct":
+                handleUpdateProduct(request, response);
+                break;
+            case "receiveStock":
+                handleReceiveStock(request, response);
+                break;
+            case "moveToShelf":
+                handleMoveToShelf(request, response);
+                break;
+            case "viewStock":
+                handleViewStock(request, response);
+                break;
+            case "viewAllInventoryStocks":
+                handleViewAllInventoryStocks(request, response);
+                break;
+            case "viewExpiryStock":
+                handleViewExpiryStock(request, response);
+                break;
+            case "removeCloseToExpiryStock":
+                handleRemoveCloseToExpiryStock(request, response);
+                break;
+            case "viewExpiringBatches":
+                handleViewExpiringBatches(request, response);
+                break;
+            case "discardExpiringBatches":
+                handleDiscardExpiringBatches(request, response);
+                break;
+            case "createDiscount":
+                handleCreateDiscount(request, response);
+                break;
+            case "assignDiscount":
+                handleAssignDiscount(request, response);
+                break;
+            case "viewAllDiscounts":
+                handleViewAllDiscounts(request, response);
+                break;
+            case "viewAllProductsWithDiscounts":
+                handleViewAllProductsWithDiscounts(request, response);
+                break;
+            case "unassignDiscount":
+                handleUnassignDiscount(request, response);
+                break;
             default:
                 request.setAttribute("error", "Unknown action.");
                 doGet(request, response);
@@ -124,5 +175,245 @@ public class InventoryServlet extends HttpServlet {
         var products = productRepository.findAll();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/viewProducts.jsp").forward(request, response);
+    }
+
+    private void handleUpdateProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String code = request.getParameter("code");
+        String newName = request.getParameter("newName");
+        try {
+            ProductService productService = new ProductService();
+            productService.updateProductName(code, newName);
+            request.setAttribute("message", "Product updated successfully.");
+        } catch (Exception e) {
+            request.setAttribute("error", "Error updating product: " + e.getMessage());
+        }
+        doGet(request, response);
+    }
+
+    private void handleReceiveStock(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productCode = request.getParameter("productCode");
+        String quantityStr = request.getParameter("quantity");
+        String purchaseDateStr = request.getParameter("purchaseDate");
+        String expiryDateStr = request.getParameter("expiryDate");
+        try {
+            int quantity = Integer.parseInt(quantityStr);
+            LocalDate purchaseDate = LocalDate.parse(purchaseDateStr);
+            LocalDate expiryDate = LocalDate.parse(expiryDateStr);
+            inventoryManager.receiveStock(productCode, purchaseDate, expiryDate, quantity);
+            request.setAttribute("message", "Stock received successfully.");
+        } catch (Exception e) {
+            request.setAttribute("error", "Error receiving stock: " + e.getMessage());
+        }
+        doGet(request, response);
+    }
+
+    private void handleMoveToShelf(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String code = request.getParameter("code");
+        String quantityStr = request.getParameter("quantity");
+        try {
+            int quantity = Integer.parseInt(quantityStr);
+            inventoryManager.moveToShelf(code, quantity);
+            request.setAttribute("message", "Stock moved to shelf successfully.");
+        } catch (Exception e) {
+            request.setAttribute("error", "Error moving to shelf: " + e.getMessage());
+        }
+        doGet(request, response);
+    }
+
+    private void handleViewStock(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productCode = request.getParameter("productCode");
+        List<String> productCodes;
+        if (productCode != null && !productCode.isEmpty()) {
+            productCodes = List.of(productCode);
+        } else {
+            productCodes = inventoryManager.getAllProductCodes();
+        }
+        request.setAttribute("productCodes", productCodes);
+        request.setAttribute("inventoryManager", inventoryManager);
+        request.getRequestDispatcher("/viewStock.jsp").forward(request, response);
+    }
+
+    private void handleViewAllInventoryStocks(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<String> productCodes = inventoryManager.getAllProductCodes();
+        request.setAttribute("productCodes", productCodes);
+        request.setAttribute("inventoryManager", inventoryManager);
+        request.getRequestDispatcher("/viewAllInventoryStocks.jsp").forward(request, response);
+    }
+
+    private void handleViewExpiryStock(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Assuming view expiry stock shows expiring batches or something
+        // Need to see what ViewExpiryStockCommand does
+        // From code, it seems to show stock with expiry info
+        List<String> productCodes = inventoryManager.getAllProductCodes();
+        request.setAttribute("productCodes", productCodes);
+        request.setAttribute("inventoryManager", inventoryManager);
+        request.getRequestDispatcher("/viewExpiryStock.jsp").forward(request, response);
+    }
+
+    private void handleRemoveCloseToExpiryStock(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String daysStr = request.getParameter("days");
+        String productCode = request.getParameter("productCode");
+        String quantityStr = request.getParameter("quantity");
+        if (daysStr != null) {
+            // First step: show list
+            int days = Integer.parseInt(daysStr);
+            List<String> products = inventoryManager.getAllProductCodesWithExpiringBatches(days);
+            request.setAttribute("expiringProducts", products);
+            request.setAttribute("days", days);
+            request.setAttribute("inventoryManager", inventoryManager);
+            request.getRequestDispatcher("/removeExpiryStock.jsp").forward(request, response);
+        } else if (productCode != null && quantityStr != null) {
+            // Second step: remove
+            int quantity = Integer.parseInt(quantityStr);
+            try {
+                inventoryManager.removeQuantityFromShelf(productCode, quantity);
+                request.setAttribute("message", "Stock removed from shelf successfully.");
+            } catch (Exception e) {
+                request.setAttribute("error", "Error removing stock: " + e.getMessage());
+            }
+            doGet(request, response);
+        } else {
+            request.setAttribute("error", "Invalid parameters for remove close to expiry stock.");
+            doGet(request, response);
+        }
+    }
+
+    private void handleViewExpiringBatches(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String daysStr = request.getParameter("days");
+        int days = Integer.parseInt(daysStr);
+        List<StockBatch> batches = inventoryManager.getAllExpiringBatches(days);
+        request.setAttribute("batches", batches);
+        request.setAttribute("days", days);
+        request.getRequestDispatcher("/viewExpiringBatches.jsp").forward(request, response);
+    }
+
+    private void handleDiscardExpiringBatches(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String daysStr = request.getParameter("days");
+        String batchIdStr = request.getParameter("batchId");
+        String quantityStr = request.getParameter("quantity");
+        if (daysStr != null && batchIdStr == null) {
+            // First step: show list
+            int days = Integer.parseInt(daysStr);
+            List<StockBatch> batches = inventoryManager.getAllExpiringBatches(days);
+            request.setAttribute("batches", batches);
+            request.setAttribute("days", days);
+            request.getRequestDispatcher("/discardExpiringBatches.jsp").forward(request, response);
+        } else if (batchIdStr != null && quantityStr != null && daysStr != null) {
+            // Second step: discard
+            int batchId = Integer.parseInt(batchIdStr);
+            int quantity = Integer.parseInt(quantityStr);
+            int days = Integer.parseInt(daysStr);
+            List<StockBatch> expiringBatches = inventoryManager.getAllExpiringBatches(days);
+            StockBatch selectedBatch = null;
+            for (StockBatch batch : expiringBatches) {
+                if (batch.getId() == batchId) {
+                    selectedBatch = batch;
+                    break;
+                }
+            }
+            if (selectedBatch == null) {
+                request.setAttribute("error", "Batch not found in expiring list.");
+                doGet(request, response);
+                return;
+            }
+            if (quantity == 0) {
+                quantity = selectedBatch.getQuantityRemaining();
+            }
+            try {
+                inventoryManager.discardBatchQuantity(batchId, quantity);
+                request.setAttribute("message", "Batch discarded successfully.");
+            } catch (Exception e) {
+                request.setAttribute("error", "Error discarding batch: " + e.getMessage());
+            }
+            doGet(request, response);
+        } else {
+            request.setAttribute("error", "Invalid parameters for discard expiring batches.");
+            doGet(request, response);
+        }
+    }
+
+    private void handleCreateDiscount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String typeStr = request.getParameter("type");
+        String valueStr = request.getParameter("value");
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+        try {
+            DiscountType type = DiscountType.valueOf(typeStr.toUpperCase());
+            double value = Double.parseDouble(valueStr);
+            LocalDate startDate = LocalDate.parse(startDateStr);
+            LocalDate endDate = LocalDate.parse(endDateStr);
+            DiscountRepository discountRepository = new DiscountRepository();
+            int id = discountRepository.createDiscount(name, type, value, startDate, endDate);
+            request.setAttribute("message", "Discount created successfully with ID: " + id);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error creating discount: " + e.getMessage());
+        }
+        doGet(request, response);
+    }
+
+    private void handleAssignDiscount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productCode = request.getParameter("productCode");
+        String discountIdStr = request.getParameter("discountId");
+        try {
+            int discountId = Integer.parseInt(discountIdStr);
+            DiscountRepository discountRepository = new DiscountRepository();
+            discountRepository.linkProductToDiscount(productCode, discountId);
+            request.setAttribute("message", "Discount assigned successfully.");
+        } catch (Exception e) {
+            request.setAttribute("error", "Error assigning discount: " + e.getMessage());
+        }
+        doGet(request, response);
+    }
+
+    private void handleViewAllDiscounts(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        DiscountRepository discountRepository = new DiscountRepository();
+        List<Discount> discounts = discountRepository.findAll();
+        request.setAttribute("discounts", discounts);
+        request.getRequestDispatcher("/viewAllDiscounts.jsp").forward(request, response);
+    }
+
+    private void handleViewAllProductsWithDiscounts(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        DiscountRepository discountRepository = new DiscountRepository();
+        ProductRepository productRepository = new ProductRepository();
+        // Need to get products with discounts, perhaps from repository
+        // Assuming discountRepository has a method or we can get from products
+        List<Product> products = productRepository.findAll();
+        request.setAttribute("products", products);
+        request.setAttribute("discountRepository", discountRepository);
+        request.setAttribute("today", LocalDate.now());
+        request.getRequestDispatcher("/viewAllProductsWithDiscounts.jsp").forward(request, response);
+    }
+
+    private void handleUnassignDiscount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productCode = request.getParameter("productCode");
+        String discountIdStr = request.getParameter("discountId");
+        try {
+            int discountId = Integer.parseInt(discountIdStr);
+            DiscountRepository discountRepository = new DiscountRepository();
+            boolean success = discountRepository.unassignDiscountFromProduct(productCode, discountId);
+            if (success) {
+                request.setAttribute("message", "Discount unassigned successfully.");
+            } else {
+                request.setAttribute("error", "Failed to unassign discount.");
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Error unassigning discount: " + e.getMessage());
+        }
+        doGet(request, response);
     }
 }

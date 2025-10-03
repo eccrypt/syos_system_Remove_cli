@@ -36,16 +36,13 @@ public class AsyncBillingServlet extends HttpServlet {
     private void handleAsyncBillProcessing(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        // Prepare request parameters
         Map<String, Object> params = new HashMap<>();
         params.put("action", "PROCESS_BILL");
         params.put("billData", request.getParameter("billData"));
         params.put("userId", request.getSession().getAttribute("userId"));
 
-        // Submit async request
         CompletableFuture<AsyncResponse> future = asyncManager.submitRequest("BILLING", params);
 
-        // Handle response asynchronously
         future.thenAccept(asyncResponse -> {
             try {
                 response.setContentType("application/json");
@@ -61,10 +58,8 @@ public class AsyncBillingServlet extends HttpServlet {
                 e.printStackTrace();
             }
         });
-
-        // For demonstration, wait for completion (in real app, this would be handled differently)
         try {
-            future.get(); // This blocks for demo purposes
+            future.get(); 
         } catch (Exception e) {
             response.getWriter().write("{\"error\": \"Processing failed: " + e.getMessage() + "\"}");
         }
