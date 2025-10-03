@@ -38,7 +38,6 @@ public class AuthFilter implements Filter {
         String contextPath = httpRequest.getContextPath();
         String path = requestURI.substring(contextPath.length());
 
-        // Allow access to login page, CSS, JS, and images
         if (path.equals("/login") || path.equals("/login.jsp") ||
             path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/images/") ||
             path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif")) {

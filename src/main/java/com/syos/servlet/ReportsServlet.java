@@ -2,7 +2,6 @@ package com.syos.servlet;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -22,7 +21,6 @@ import com.syos.repository.ReportRepository;
 import com.syos.repository.ShelfStockRepository;
 import com.syos.repository.StockBatchRepository;
 import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet("/reports")
 public class ReportsServlet extends HttpServlet {

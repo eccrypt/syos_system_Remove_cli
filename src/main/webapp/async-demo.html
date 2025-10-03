@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Async Processing Demo</title>
+</head>
+<body>
+    <h1>Asynchronous Request Processing Demo</h1>
+
+    <div>
+        <h2>Queue Statistics</h2>
+        <button onclick="getQueueStats()">Get Queue Stats</button>
+        <div id="stats">Click to load statistics...</div>
+    </div>
+
+    <div>
+        <h2>Async Bill Processing</h2>
+        <form onsubmit="processBill(event)">
+            <label>Bill Data: <input type="text" id="billData" placeholder="Enter bill data" required></label>
+            <button type="submit">Process Bill Asynchronously</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Async Bill History</h2>
+        <button onclick="getBillHistory()">Get Bill History</button>
+    </div>
+
+    <div id="results">
+        <h3>Results:</h3>
+        <pre id="resultContent">No results yet...</pre>
+    </div>
+
+    <script>
+        async function getQueueStats() {
+            try {
+                const response = await fetch('/async-billing');
+                const stats = await response.json();
+                document.getElementById('stats').innerHTML =
+                    `Queue Size: ${stats.queueSize}<br>` +
+                    `Remaining Capacity: ${stats.remainingCapacity}<br>` +
+                    `Active Workers: ${stats.activeWorkers}<br>` +
+                    `Is Running: ${stats.isRunning}`;
+            } catch (error) {
+                document.getElementById('stats').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function processBill(event) {
+            event.preventDefault();
+            const billData = document.getElementById('billData').value;
+
+            try {
+                const response = await fetch('/async-billing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=processBill&billData=${encodeURIComponent(billData)}`
+                });
+
+                const result = await response.text();
+                document.getElementById('resultContent').textContent = result;
+            } catch (error) {
+                document.getElementById('resultContent').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function getBillHistory() {
+            try {
+                const response = await fetch('/async-billing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=getBillHistory'
+                });
+
+                const result = await response.text();
+                document.getElementById('resultContent').textContent = result;
+            } catch (error) {
+                document.getElementById('resultContent').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // Auto-refresh stats every 5 seconds
+        setInterval(getQueueStats, 5000);
+    </script>
+</body>
+</html>

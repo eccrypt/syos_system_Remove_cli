@@ -20,6 +20,7 @@ import com.syos.repository.BillingRepository;
 import com.syos.repository.ProductRepository;
 import com.syos.repository.ShelfStockRepository;
 import com.syos.singleton.InventoryManager;
+import com.syos.async.AsyncProcessorManager;
 import com.syos.strategy.DiscountPricingStrategy;
 import com.syos.strategy.ExpiryAwareFifoStrategy;
 import com.syos.strategy.NoDiscountStrategy;
