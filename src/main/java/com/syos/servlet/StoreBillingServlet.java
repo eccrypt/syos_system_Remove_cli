@@ -32,7 +32,12 @@ public class StoreBillingServlet extends HttpServlet {
     private final ShelfStockRepository shelfStockRepository = new ShelfStockRepository(productRepository);
     private final BillItemFactory billItemFactory = new BillItemFactory(
             new DiscountPricingStrategy(new NoDiscountStrategy()));
-    private final InventoryManager inventoryManager = InventoryManager.getInstance(new ExpiryAwareFifoStrategy());
+    private final InventoryManager inventoryManager;
+
+    public StoreBillingServlet() {
+        // Ensure InventoryManager singleton is initialized with strategy
+        this.inventoryManager = InventoryManager.getInstance(new ExpiryAwareFifoStrategy());
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

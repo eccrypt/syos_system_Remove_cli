@@ -7,12 +7,13 @@ import com.syos.model.Discount;
 import com.syos.model.Product;
 import com.syos.repository.DiscountRepository;
 import com.syos.singleton.InventoryManager;
+import com.syos.strategy.ExpiryAwareFifoStrategy;
 import com.syos.util.CommonVariables;
 
 public class DiscountPricingStrategy implements PricingStrategy {
 	private final PricingStrategy basePriceStrategy;
 	private final DiscountRepository discountRepository = new DiscountRepository();
-	private final InventoryManager inventoryManager = InventoryManager.getInstance(null);
+	private final InventoryManager inventoryManager = InventoryManager.getInstance(new ExpiryAwareFifoStrategy());
 
 	public DiscountPricingStrategy(PricingStrategy basePriceStrategy) {
 		this.basePriceStrategy = basePriceStrategy;

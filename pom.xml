@@ -110,6 +110,14 @@
 					<port>8080</port>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>com.syos.SyosSystem</mainClass>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
