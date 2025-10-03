@@ -3,7 +3,9 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\DiscountAssignmentService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Product.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\DiscountStrategy.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\AuthFilter.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Bill.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\AuthenticationService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\dto\ReportDTOMapper.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\ViewAllDiscountsCommand.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\StockBatch.java
@@ -31,6 +33,7 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\ReportService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\CustomerRegistrationService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\config\ConfigLoader.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Admin.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\ViewExpiringBatchesCommand.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\RegistrationService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\ViewAllProductsWithDiscountsCommand.java
@@ -46,12 +49,15 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Customer.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\dto\ProductStockReportItemDTO.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\enums\TransactionType.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\LoginServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\UnassignDiscountCommand.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\OnlineStoreServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\ReportsServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\util\CommonVariables.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\repository\UserRepository.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\OnlineStoreService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\DiscardExpiringBatchesCommand.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Staff.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\Command.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\StoreBillingServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\dto\BillItemReportDTO.java
@@ -59,6 +65,7 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\PricingStrategy.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\factory\BillItemFactory.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\RemoveCloseToExpiryStockCommand.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\LogoutServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Discount.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\BillItem.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\dto\BillReportDTO.java
