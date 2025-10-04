@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.syos.async.AsyncProcessorManager;
 import com.syos.async.AsyncResponse;
 
-@WebServlet("/async-billing")
+@WebServlet(asyncSupported = true, urlPatterns = "/async-billing")
 public class AsyncBillingServlet extends HttpServlet {
     private final AsyncProcessorManager asyncManager = AsyncProcessorManager.getInstance();
 
@@ -36,6 +37,10 @@ public class AsyncBillingServlet extends HttpServlet {
     private void handleAsyncBillProcessing(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        // Start async processing
+        AsyncContext asyncContext = request.startAsync();
+        asyncContext.setTimeout(30000); // 30 seconds timeout
+
         Map<String, Object> params = new HashMap<>();
         params.put("action", "PROCESS_BILL");
         params.put("billData", request.getParameter("billData"));
@@ -45,49 +50,76 @@ public class AsyncBillingServlet extends HttpServlet {
 
         future.thenAccept(asyncResponse -> {
             try {
-                response.setContentType("application/json");
+                HttpServletResponse asyncResponseObj = (HttpServletResponse) asyncContext.getResponse();
+                asyncResponseObj.setContentType("application/json");
                 if (asyncResponse.isSuccess()) {
-                    response.getWriter().write("{\"status\": \"success\", \"data\": " +
+                    asyncResponseObj.getWriter().write("{\"status\": \"success\", \"data\": " +
                         asyncResponse.getData() + ", \"processingTime\": " +
                         asyncResponse.getProcessingTime() + "}");
                 } else {
-                    response.getWriter().write("{\"status\": \"error\", \"message\": \"" +
+                    asyncResponseObj.getWriter().write("{\"status\": \"error\", \"message\": \"" +
                         asyncResponse.getErrorMessage() + "\"}");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                asyncContext.complete();
             }
+        }).exceptionally(throwable -> {
+            try {
+                HttpServletResponse asyncResponseObj = (HttpServletResponse) asyncContext.getResponse();
+                asyncResponseObj.getWriter().write("{\"error\": \"Processing failed: " + throwable.getMessage() + "\"}");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                asyncContext.complete();
+            }
+            return null;
         });
-        try {
-            future.get(); 
-        } catch (Exception e) {
-            response.getWriter().write("{\"error\": \"Processing failed: " + e.getMessage() + "\"}");
-        }
     }
 
     private void handleAsyncBillHistory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
+        // Start async processing
+        AsyncContext asyncContext = request.startAsync();
+        asyncContext.setTimeout(30000); // 30 seconds timeout
+
         Map<String, Object> params = new HashMap<>();
         params.put("action", "GET_BILL_HISTORY");
         params.put("userId", request.getSession().getAttribute("userId"));
 
         CompletableFuture<AsyncResponse> future = asyncManager.submitRequest("BILLING", params);
 
-        try {
-            AsyncResponse asyncResponse = future.get();
-            response.setContentType("application/json");
+        future.thenAccept(asyncResponse -> {
+            try {
+                HttpServletResponse asyncResponseObj = (HttpServletResponse) asyncContext.getResponse();
+                asyncResponseObj.setContentType("application/json");
 
-            if (asyncResponse.isSuccess()) {
-                response.getWriter().write("{\"status\": \"success\", \"data\": " +
-                    asyncResponse.getData() + ", \"processingTime\": " +
-                    asyncResponse.getProcessingTime() + "}");
-            } else {
-                response.getWriter().write("{\"status\": \"error\", \"message\": \"" +
-                    asyncResponse.getErrorMessage() + "\"}");
+                if (asyncResponse.isSuccess()) {
+                    asyncResponseObj.getWriter().write("{\"status\": \"success\", \"data\": " +
+                        asyncResponse.getData() + ", \"processingTime\": " +
+                        asyncResponse.getProcessingTime() + "}");
+                } else {
+                    asyncResponseObj.getWriter().write("{\"status\": \"error\", \"message\": \"" +
+                        asyncResponse.getErrorMessage() + "\"}");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                asyncContext.complete();
             }
-        } catch (Exception e) {
-            response.getWriter().write("{\"error\": \"Processing failed: " + e.getMessage() + "\"}");
-        }
+        }).exceptionally(throwable -> {
+            try {
+                HttpServletResponse asyncResponseObj = (HttpServletResponse) asyncContext.getResponse();
+                asyncResponseObj.getWriter().write("{\"error\": \"Processing failed: " + throwable.getMessage() + "\"}");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                asyncContext.complete();
+            }
+            return null;
+        });
     }
 
     @Override
