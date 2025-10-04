@@ -8,107 +8,106 @@
 <html>
 <head>
     <title>Sales Report</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .bill-section { margin: 20px 0; border: 1px solid #ccc; padding: 10px; }
-        .total { font-weight: bold; font-size: 1.2em; }
-        .back-link { margin-bottom: 20px; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-    <div class="back-link">
-        <a href="reports.jsp">← Back to Reports Menu</a>
-    </div>
+<body class="bg-white">
+    <div class="container py-5">
+        <a href="reports.jsp" class="btn btn-light mb-4">Back to Reports Menu</a>
 
-    <h1>Sales Report</h1>
+        <h1 class="text-center mb-4">Sales Report</h1>
 
-    <%
-        LocalDate reportDate = (LocalDate) request.getAttribute("reportDate");
-        List<BillReportDTO> billReportDTOs = (List<BillReportDTO>) request.getAttribute("billReportDTOs");
-        Double totalRevenue = (Double) request.getAttribute("totalRevenue");
+        <%
+            LocalDate reportDate = (LocalDate) request.getAttribute("reportDate");
+            List<BillReportDTO> billReportDTOs = (List<BillReportDTO>) request.getAttribute("billReportDTOs");
+            Double totalRevenue = (Double) request.getAttribute("totalRevenue");
 
-        if (reportDate != null) {
-    %>
-        <h2>Report for: <%= reportDate.format(DateTimeFormatter.ISO_DATE) %></h2>
-    <%
-        } else {
-    %>
-        <h2>All Transactions Report</h2>
-    <%
-        }
+            if (reportDate != null) {
+        %>
+            <h2 class="mb-4">Report for: <%= reportDate.format(DateTimeFormatter.ISO_DATE) %></h2>
+        <%
+            } else {
+        %>
+            <h2 class="mb-4">All Transactions Report</h2>
+        <%
+            }
 
-        if (billReportDTOs != null && !billReportDTOs.isEmpty()) {
-            for (BillReportDTO billDTO : billReportDTOs) {
-    %>
-                <div class="bill-section">
-                    <h3>Bill #<%= billDTO.getSerialNumber() %> - Date: <%= billDTO.getBillDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE) %> - Type: <%= billDTO.getTransactionType() %></h3>
-                    <p><strong>Cash Tendered:</strong> <%= String.format("%.2f", billDTO.getCashTendered()) %> | <strong>Change Returned:</strong> <%= String.format("%.2f", billDTO.getChangeReturned()) %></p>
+            if (billReportDTOs != null && !billReportDTOs.isEmpty()) {
+                for (BillReportDTO billDTO : billReportDTOs) {
+        %>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Bill #<%= billDTO.getSerialNumber() %> - Date: <%= billDTO.getBillDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE) %> - Type: <%= billDTO.getTransactionType() %></h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Cash Tendered:</strong> <%= String.format("%.2f", billDTO.getCashTendered()) %> | <strong>Change Returned:</strong> <%= String.format("%.2f", billDTO.getChangeReturned()) %></p>
 
+                            <%
+                                List<BillItemReportDTO> itemDTOs = billDTO.getItems();
+                                if (itemDTOs != null && !itemDTOs.isEmpty()) {
+                            %>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Qty</th>
+                                                <th>Unit Price</th>
+                                                <th>Subtotal</th>
+                                                <th>Discount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                for (BillItemReportDTO itemDTO : itemDTOs) {
+                                            %>
+                                                <tr>
+                                                    <td><%= itemDTO.getProductName() %></td>
+                                                    <td><%= itemDTO.getQuantity() %></td>
+                                                    <td><%= String.format("%.2f", itemDTO.getUnitPrice()) %></td>
+                                                    <td><%= String.format("%.2f", itemDTO.getCalculatedSubtotal()) %></td>
+                                                    <td><%= String.format("%.2f", itemDTO.getDiscountAmount()) %></td>
+                                                </tr>
+                                            <%
+                                                }
+                                            %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="fw-bold fs-5">Total for Bill #<%= billDTO.getSerialNumber() %>: <%= String.format("%.2f", billDTO.getTotalAmount()) %></p>
+                            <%
+                                } else {
+                            %>
+                                <p>No items found for this bill.</p>
+                            <%
+                                }
+                            %>
+                        </div>
+                    </div>
+                <%
+                    }
+                %>
+
+                <div class="alert alert-dark">
                     <%
-                        List<BillItemReportDTO> itemDTOs = billDTO.getItems();
-                        if (itemDTOs != null && !itemDTOs.isEmpty()) {
+                        if (reportDate != null) {
                     %>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Subtotal</th>
-                                    <th>Discount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%
-                                    for (BillItemReportDTO itemDTO : itemDTOs) {
-                                %>
-                                    <tr>
-                                        <td><%= itemDTO.getProductName() %></td>
-                                        <td><%= itemDTO.getQuantity() %></td>
-                                        <td><%= String.format("%.2f", itemDTO.getUnitPrice()) %></td>
-                                        <td><%= String.format("%.2f", itemDTO.getCalculatedSubtotal()) %></td>
-                                        <td><%= String.format("%.2f", itemDTO.getDiscountAmount()) %></td>
-                                    </tr>
-                                <%
-                                    }
-                                %>
-                            </tbody>
-                        </table>
-                        <p class="total">Total for Bill #<%= billDTO.getSerialNumber() %>: <%= String.format("%.2f", billDTO.getTotalAmount()) %></p>
+                        <strong>Total revenue for <%= reportDate.format(DateTimeFormatter.ISO_DATE) %>: <%= String.format("%.2f", totalRevenue) %></strong>
                     <%
                         } else {
                     %>
-                        <p>No items found for this bill.</p>
+                        <strong>Total revenue for all transactions: <%= String.format("%.2f", totalRevenue) %></strong>
                     <%
                         }
                     %>
                 </div>
             <%
+                } else {
+            %>
+                <p class="text-muted">No sales records found.</p>
+            <%
                 }
             %>
-
-            <div class="total">
-                <%
-                    if (reportDate != null) {
-                %>
-                    Total revenue for <%= reportDate.format(DateTimeFormatter.ISO_DATE) %>: <%= String.format("%.2f", totalRevenue) %>
-                <%
-                    } else {
-                %>
-                    Total revenue for all transactions: <%= String.format("%.2f", totalRevenue) %>
-                <%
-                    }
-                %>
-            </div>
-        <%
-            } else {
-        %>
-            <p>No sales records found.</p>
-        <%
-            }
-        %>
+    </div>
 </body>
 </html>

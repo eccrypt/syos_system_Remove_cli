@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.syos.singleton.InventoryManager" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    InventoryManager inventoryManager = InventoryManager.getInstance(null);
+    List<String> productCodes = inventoryManager.getAllProductCodes();
+    request.setAttribute("productCodes", productCodes);
+    request.setAttribute("inventoryManager", inventoryManager);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,16 +15,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <h1 class="text-center mb-4">Stock Management</h1>
-        <a href="inventory.jsp" class="btn btn-secondary mb-4">Back to Inventory Dashboard</a>
+        <a href="inventory.jsp" class="btn btn-light mb-4">Back to Inventory Dashboard</a>
 
         <c:if test="${not empty error}">
-            <div class="alert alert-danger">${error}</div>
+            <div class="alert alert-dark">${error}</div>
         </c:if>
         <c:if test="${not empty message}">
-            <div class="alert alert-success">${message}</div>
+            <div class="alert alert-dark">${message}</div>
         </c:if>
 
         <div class="row g-4 mb-4">
@@ -44,29 +52,7 @@
                                 <label class="form-label">Expiry Date</label>
                                 <input type="date" name="expiryDate" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Receive Stock</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Move to Shelf</h5>
-                    </div>
-                    <div class="card-body">
-                        <form action="inventory" method="post">
-                            <input type="hidden" name="action" value="moveToShelf">
-                            <div class="mb-3">
-                                <label class="form-label">Product Code</label>
-                                <input type="text" name="code" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Quantity</label>
-                                <input type="number" name="quantity" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Move to Shelf</button>
+                            <button type="submit" class="btn btn-dark">Receive Stock</button>
                         </form>
                     </div>
                 </div>
@@ -76,10 +62,6 @@
         <div class="card">
             <div class="card-header">
                 <h5>All Inventory Stocks</h5>
-                <form action="inventory" method="post" class="d-inline">
-                    <input type="hidden" name="action" value="viewAllInventoryStocks">
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Refresh</button>
-                </form>
             </div>
             <div class="card-body">
                 <c:if test="${not empty productCodes}">
@@ -136,12 +118,12 @@
                                                         <input type="hidden" name="action" value="moveToShelf">
                                                         <input type="hidden" name="code" value="${productCode}">
                                                         <input type="number" name="quantity" min="1" max="${batch.quantityRemaining}" placeholder="Qty" class="form-control form-control-sm d-inline-block" style="width: 80px;" required>
-                                                        <button type="submit" class="btn btn-warning btn-sm">Move</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm">Move</button>
                                                     </form>
                                                     <form action="inventory" method="post" class="d-inline">
                                                         <input type="hidden" name="action" value="discardBatch">
                                                         <input type="hidden" name="batchId" value="${batch.id}">
-                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Discard this batch?');">Discard</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm" onclick="return confirm('Discard this batch?');">Discard</button>
                                                     </form>
                                                 </td>
                                             </tr>

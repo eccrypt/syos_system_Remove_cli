@@ -14,7 +14,8 @@
                 <span class="navbar-text me-3">
                     Welcome, <%= session.getAttribute("userName") %> (<%= session.getAttribute("userRole") %>)
                 </span>
-                <a href="logout" class="btn btn-outline-dark btn-sm">Logout</a>
+                <a href="logout" class="btn btn-outline-dark btn-sm" style="color: white;">Logout</a>
+
             </div>
         </div>
     </nav>

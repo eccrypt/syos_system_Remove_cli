@@ -25,6 +25,13 @@
         <button onclick="getBillHistory()">Get Bill History</button>
     </div>
 
+    <div>
+        <h2>Load Testing - Rapid Simultaneous Requests</h2>
+        <p>Simulates two clients sending 10 requests each in rapid succession</p>
+        <button onclick="runLoadTest()">Run Load Test</button>
+        <div id="loadTestResults">Load test results will appear here...</div>
+    </div>
+
     <div id="results">
         <h3>Results:</h3>
         <pre id="resultContent">No results yet...</pre>
@@ -79,6 +86,73 @@
                 document.getElementById('resultContent').textContent = result;
             } catch (error) {
                 document.getElementById('resultContent').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function runLoadTest() {
+            const resultsDiv = document.getElementById('loadTestResults');
+            resultsDiv.innerHTML = 'Starting load test...<br>';
+
+            const numClients = 2;
+            const requestsPerClient = 10;
+            const delayBetweenRequests = 50; // ms
+
+            let totalRequests = 0;
+            let successfulRequests = 0;
+            let failedRequests = 0;
+            const startTime = Date.now();
+
+            // Function to send a single request
+            async function sendRequest(clientId, requestNum) {
+                totalRequests++;
+                try {
+                    const response = await fetch('/async-billing', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `action=processBill&billData=LoadTest_Client${clientId}_Req${requestNum}`
+                    });
+
+                    if (response.ok) {
+                        successfulRequests++;
+                        resultsDiv.innerHTML += `Client ${clientId} Request ${requestNum}: SUCCESS<br>`;
+                    } else {
+                        failedRequests++;
+                        resultsDiv.innerHTML += `Client ${clientId} Request ${requestNum}: HTTP ${response.status}<br>`;
+                    }
+                } catch (error) {
+                    failedRequests++;
+                    resultsDiv.innerHTML += `Client ${clientId} Request ${requestNum}: FAILED - ${error.message}<br>`;
+                }
+            }
+
+            // Start clients
+            const clientPromises = [];
+            for (let clientId = 1; clientId <= numClients; clientId++) {
+                clientPromises.push(runClient(clientId, requestsPerClient, delayBetweenRequests, sendRequest));
+            }
+
+            // Wait for all clients to finish
+            await Promise.all(clientPromises);
+
+            const endTime = Date.now();
+            const totalTime = endTime - startTime;
+
+            resultsDiv.innerHTML += `<br>=== Load Test Results ===<br>`;
+            resultsDiv.innerHTML += `Total time: ${totalTime}ms<br>`;
+            resultsDiv.innerHTML += `Total requests: ${totalRequests}<br>`;
+            resultsDiv.innerHTML += `Successful requests: ${successfulRequests}<br>`;
+            resultsDiv.innerHTML += `Failed requests: ${failedRequests}<br>`;
+            resultsDiv.innerHTML += `Requests per second: ${(totalRequests / (totalTime / 1000)).toFixed(2)}<br>`;
+        }
+
+        async function runClient(clientId, requestsPerClient, delay, sendRequest) {
+            for (let i = 1; i <= requestsPerClient; i++) {
+                await sendRequest(clientId, i);
+                if (i < requestsPerClient) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
             }
         }
 

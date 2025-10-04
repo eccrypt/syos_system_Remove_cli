@@ -8,19 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .receipt-container { max-width: 600px; margin: 0 auto; }
-        .store-header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .store-header { background: black; color: white; padding: 20px; text-align: center; }
         .receipt-body { padding: 20px; }
         .total-row { border-top: 2px solid #333; padding-top: 10px; }
-        .receipt-table th { background: #f8f9fa; }
+        .receipt-table th { background: white; }
     </style>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <div class="receipt-container">
             <div class="card shadow">
                 <div class="store-header">
                     <h2 class="mb-1">SYOS SUPERMARKET</h2>
-                    <p class="mb-0">Sales Receipt</p>
+                    <p class="mb-0">Invoice</p>
                 </div>
 
                 <div class="receipt-body">
@@ -47,9 +47,8 @@
                                 <tr>
                                     <td>
                                         <strong>${item.product.name}</strong>
-                                        <br><small class="text-muted">Code: ${item.product.code}</small>
                                         <c:if test="${item.discountAmount > 0}">
-                                            <br><small class="text-danger">Discount: -${item.discountAmount}</small>
+                                            <br><small class="text-dark">Discount: -${item.discountAmount}</small>
                                         </c:if>
                                     </td>
                                     <td class="text-center">${item.quantity}</td>
@@ -81,18 +80,13 @@
                             </tr>
                         </tfoot>
                     </table>
-
-                    <div class="text-center mt-4">
-                        <p class="mb-1 fw-bold">Thank you for shopping with us!</p>
-                        <p class="text-muted small mb-0">Please visit us again</p>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="text-center mt-4">
-            <a href="billing" class="btn btn-primary me-2">New Bill</a>
-            <a href="index.jsp" class="btn btn-secondary">Main Menu</a>
+            <a href="billing" class="btn btn-dark me-2">New Bill</a>
+            <a href="index.jsp" class="btn btn-light">Main Menu</a>
         </div>
 
     </div>

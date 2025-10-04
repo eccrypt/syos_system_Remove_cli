@@ -3,105 +3,45 @@
 <html>
 <head>
     <title>Login - SYOS Billing System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .login-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-        input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: #d32f2f;
-            background-color: #ffebee;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #ffcdd2;
-        }
-        .info {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-    <div class="login-container">
-        <h1>SYOS Billing System</h1>
+<body class="bg-white d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <h1 class="text-center mb-4">SYOS Billing System</h1>
 
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error">
-                <%= request.getAttribute("error") %>
+                        <% if (request.getAttribute("error") != null) { %>
+                            <div class="alert alert-dark" role="alert">
+                                <%= request.getAttribute("error") %>
+                            </div>
+                        <% } %>
+
+                        <form action="login" method="post">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password:</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-dark w-100">Login</button>
+                        </form>
+
+                        <div class="text-center mt-4 text-muted">
+                            <p><strong>Demo Accounts:</strong></p>
+                            <p>Admin: test@gmail.com / admin123</p>
+                            <p>Staff: staff@syos.com / staff123</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        <% } %>
-
-        <form action="login" method="post">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-
-            <input type="submit" value="Login">
-        </form>
-
-        <div class="info">
-            <p><strong>Demo Accounts:</strong></p>
-            <p>Admin: test@gmail.com / admin123</p>
-            <p>Staff: staff@syos.com / staff123</p>
         </div>
     </div>
 </body>

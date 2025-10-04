@@ -1,3 +1,4 @@
+com\test\async\AsyncLoadTest.class
 com\test\builder\BillBuilderTest.class
 com\test\builder\CustomerBuilderTest.class
 com\test\service\ProductServiceTest.class

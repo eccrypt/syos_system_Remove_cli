@@ -7,16 +7,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <h1 class="text-center mb-4">Store Billing</h1>
-        <a href="index.jsp" class="btn btn-secondary mb-4">Back to Main Menu</a>
+        <a href="index.jsp" class="btn btn-light mb-4">Back to Main Menu</a>
 
         <c:if test="${not empty error}">
-            <div class="alert alert-danger">${error}</div>
+            <div class="alert alert-dark">${error}</div>
         </c:if>
         <c:if test="${not empty message}">
-            <div class="alert alert-success">${message}</div>
+            <div class="alert alert-dark">${message}</div>
         </c:if>
 
         <div class="card mb-4">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">&nbsp;</label>
-                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                        <button type="submit" class="btn btn-dark w-100">Search</button>
                     </div>
                 </form>
             </div>
@@ -67,7 +67,7 @@
                                                     <div class="input-group input-group-sm" style="width: 150px;">
                                                         <span class="input-group-text">Qty</span>
                                                         <input type="number" name="quantity" value="1" min="1" class="form-control" required>
-                                                        <button type="submit" class="btn btn-success btn-sm">Add</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm">Add</button>
                                                     </div>
                                                 </form>
                                             </td>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">&nbsp;</label>
-                        <button type="submit" class="btn btn-primary w-100">Add Item</button>
+                        <button type="submit" class="btn btn-dark w-100">Add Item</button>
                     </div>
                 </form>
             </div>
@@ -139,7 +139,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="alert alert-info">
+                    <div class="alert alert-dark">
                         <strong>Total Due: </strong>
                         <c:set var="total" value="0"/>
                         <c:forEach var="item" items="${billItems}">
@@ -163,7 +163,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">&nbsp;</label>
-                            <button type="submit" class="btn btn-success w-100">Pay and Print Bill</button>
+                            <button type="submit" class="btn btn-dark w-100">Pay and Print Bill</button>
                         </div>
                     </form>
                 </div>
@@ -173,7 +173,7 @@
         <div class="text-center">
             <form action="billing" method="post">
                 <input type="hidden" name="action" value="newBill">
-                <button type="submit" class="btn btn-warning">Start New Bill</button>
+                <button type="submit" class="btn btn-dark">Start New Bill</button>
             </form>
         </div>
     </div>
