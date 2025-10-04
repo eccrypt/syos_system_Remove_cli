@@ -4,12 +4,16 @@
 <html>
 <head>
     <title>Stock Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-    <h1>Stock Details</h1>
-    <a href="inventory">Back to Inventory Menu</a>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Stock Details</h1>
+        <a href="inventory" class="btn btn-secondary mb-4">Back to Inventory Menu</a>
 
-    <table border="1">
+        <div class="table-responsive">
+            <table class="table table-striped">
         <tr>
             <th>Product Code</th>
             <th>Shelf Qty</th>
