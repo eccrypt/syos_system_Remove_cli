@@ -20,7 +20,7 @@
             <div class="card shadow">
                 <div class="store-header">
                     <h2 class="mb-1">SYOS SUPERMARKET</h2>
-                    <p class="mb-0">Sales Receipt</p>
+                    <p class="mb-0">Invoice</p>
                 </div>
 
                 <div class="receipt-body">
@@ -47,7 +47,6 @@
                                 <tr>
                                     <td>
                                         <strong>${item.product.name}</strong>
-                                        <br><small class="text-muted">Code: ${item.product.code}</small>
                                         <c:if test="${item.discountAmount > 0}">
                                             <br><small class="text-danger">Discount: -${item.discountAmount}</small>
                                         </c:if>
@@ -81,11 +80,6 @@
                             </tr>
                         </tfoot>
                     </table>
-
-                    <div class="text-center mt-4">
-                        <p class="mb-1 fw-bold">Thank you for shopping with us!</p>
-                        <p class="text-muted small mb-0">Please visit us again</p>
-                    </div>
                 </div>
             </div>
         </div>

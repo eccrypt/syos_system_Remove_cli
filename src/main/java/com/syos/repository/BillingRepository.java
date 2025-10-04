@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syos.db.DatabaseManager;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
+import com.syos.model.Product;
 
 public class BillingRepository {
 
@@ -61,6 +64,66 @@ public class BillingRepository {
 			connection.commit();
 		} catch (SQLException e) {
 			throw new RuntimeException("Error saving bill & items", e);
+		}
+	}
+
+	public Bill findById(int billId) {
+		String sql = """
+				SELECT b.id, b.serial_number, b.bill_date, b.total_amount, b.cash_tendered, b.change_returned, b.transaction_type,
+				       bi.id as item_id, bi.quantity, bi.total_price, bi.discount_amount,
+				       p.code as product_code, p.name as product_name, p.price as product_price
+				  FROM bill b
+				  JOIN bill_item bi ON b.id = bi.bill_id
+				  JOIN product p ON bi.product_code = p.code
+				 WHERE b.id = ?
+				 ORDER BY bi.id
+				""";
+
+		try (Connection connection = DatabaseManager.getInstance().getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+			preparedStatement.setInt(1, billId);
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			Bill bill = null;
+			List<BillItem> items = new ArrayList<>();
+
+			while (resultSet.next()) {
+				if (bill == null) {
+					// Create bill from first row
+					int serialNumber = resultSet.getInt("serial_number");
+					java.util.Date billDate = new java.util.Date(resultSet.getTimestamp("bill_date").getTime());
+					double totalAmount = resultSet.getDouble("total_amount");
+					double cashTendered = resultSet.getDouble("cash_tendered");
+					double changeReturned = resultSet.getDouble("change_returned");
+					String transactionType = resultSet.getString("transaction_type");
+
+					bill = new Bill(billId, serialNumber, billDate, totalAmount, cashTendered, changeReturned, transactionType);
+				}
+
+				// Create product
+				String productCode = resultSet.getString("product_code");
+				String productName = resultSet.getString("product_name");
+				double productPrice = resultSet.getDouble("product_price");
+				Product product = new Product(productCode, productName, productPrice);
+
+				// Create bill item
+				int itemId = resultSet.getInt("item_id");
+				int quantity = resultSet.getInt("quantity");
+				double totalPrice = resultSet.getDouble("total_price");
+				double discountAmount = resultSet.getDouble("discount_amount");
+
+				BillItem item = new BillItem(itemId, billId, product, quantity, totalPrice, discountAmount);
+				items.add(item);
+			}
+
+			if (bill != null) {
+				bill.setItems(items);
+			}
+
+			return bill;
+		} catch (SQLException e) {
+			throw new RuntimeException("Error retrieving bill by ID", e);
 		}
 	}
 

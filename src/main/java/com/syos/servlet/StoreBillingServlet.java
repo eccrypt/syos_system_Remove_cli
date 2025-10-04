@@ -20,7 +20,6 @@ import com.syos.repository.BillingRepository;
 import com.syos.repository.ProductRepository;
 import com.syos.repository.ShelfStockRepository;
 import com.syos.singleton.InventoryManager;
-import com.syos.async.AsyncProcessorManager;
 import com.syos.strategy.DiscountPricingStrategy;
 import com.syos.strategy.ExpiryAwareFifoStrategy;
 import com.syos.strategy.NoDiscountStrategy;
@@ -164,15 +163,26 @@ public class StoreBillingServlet extends HttpServlet {
                 return;
             }
 
-            // Submit payment processing to async queue
-            processPaymentAsync(request, billItems, cashTendered, totalDue);
+            // Process bill synchronously
+            int serialNumber = billRepository.nextSerial();
+            Bill bill = new Bill.BillBuilder(serialNumber, billItems)
+                .withCashTendered(cashTendered)
+                .build();
 
-            // Clear session immediately and show processing message
+            // Save bill to database
+            billRepository.save(bill);
+
+            // Deduct from inventory
+            for (BillItem item : billItems) {
+                inventoryManager.deductFromShelf(item.getProduct().getCode(), item.getQuantity());
+            }
+
+            // Clear session and retrieve the saved bill with joined product data
             session.removeAttribute("billItems");
-            request.setAttribute("processing", true);
-            request.setAttribute("totalAmount", totalDue);
-            request.setAttribute("cashTendered", cashTendered);
-            request.setAttribute("change", cashTendered - totalDue);
+
+            // Retrieve the complete bill with joined product information
+            Bill savedBill = billRepository.findById(bill.getId());
+            request.setAttribute("bill", savedBill);
             request.getRequestDispatcher("/billReceipt.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -181,23 +191,6 @@ public class StoreBillingServlet extends HttpServlet {
         }
     }
 
-    private void processPaymentAsync(HttpServletRequest request, List<BillItem> billItems,
-                                   double cashTendered, double totalDue) {
-        // Submit to async processing queue
-        AsyncProcessorManager asyncManager = AsyncProcessorManager.getInstance();
-
-        // Prepare bill data for async processing
-        java.util.Map<String, Object> billData = new java.util.HashMap<>();
-        billData.put("action", "PROCESS_BILL");
-        billData.put("billItems", billItems);
-        billData.put("cashTendered", cashTendered);
-        billData.put("totalDue", totalDue);
-        billData.put("userId", request.getSession().getAttribute("userId"));
-        billData.put("sessionId", request.getSession().getId());
-
-        // Submit async request (fire and forget for now)
-        asyncManager.submitRequest("BILLING", billData);
-    }
 
     private void newBill(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

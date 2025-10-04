@@ -85,7 +85,7 @@ public class BillingRequestProcessor implements RequestProcessor {
 
             return AsyncResponse.success(request.getRequestId(),
                 Map.of("status", "processed",
-                       "billId", "BILL-" + serialNumber,
+                       "billId", bill.getId(),
                        "serialNumber", serialNumber,
                        "totalAmount", totalDue,
                        "cashTendered", cashTendered,
