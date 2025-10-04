@@ -84,7 +84,7 @@ class BillItemFactoryTest {
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
 				() -> billItemFactory.create(mockProduct, quantity),
 				"Should throw IllegalArgumentException when quantity is zero");
-		assertEquals("Quantity must be > 0", exception.getMessage());
+		assertEquals("Quantity must be greater than 0", exception.getMessage());
 
 		// Verify no interactions with strategy or product (as quantity check is first)
 		verifyNoInteractions(mockPricingStrategy);
@@ -101,7 +101,7 @@ class BillItemFactoryTest {
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
 				() -> billItemFactory.create(mockProduct, quantity),
 				"Should throw IllegalArgumentException when quantity is negative");
-		assertEquals("Quantity must be > 0", exception.getMessage());
+		assertEquals("Quantity must be greater than 0", exception.getMessage());
 
 		// Verify no interactions with strategy or product
 		verifyNoInteractions(mockPricingStrategy);

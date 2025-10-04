@@ -79,7 +79,6 @@ public class ReportsServlet extends HttpServlet {
 
     private void handleAnalysis(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Simplified, just show product stock
         handleProductStock(request, response);
     }
 }

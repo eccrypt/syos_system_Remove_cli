@@ -90,7 +90,6 @@ public class BillingRepository {
 
 			while (resultSet.next()) {
 				if (bill == null) {
-					// Create bill from first row
 					int serialNumber = resultSet.getInt("serial_number");
 					java.util.Date billDate = new java.util.Date(resultSet.getTimestamp("bill_date").getTime());
 					double totalAmount = resultSet.getDouble("total_amount");
@@ -101,13 +100,11 @@ public class BillingRepository {
 					bill = new Bill(billId, serialNumber, billDate, totalAmount, cashTendered, changeReturned, transactionType);
 				}
 
-				// Create product
 				String productCode = resultSet.getString("product_code");
 				String productName = resultSet.getString("product_name");
 				double productPrice = resultSet.getDouble("product_price");
 				Product product = new Product(productCode, productName, productPrice);
 
-				// Create bill item
 				int itemId = resultSet.getInt("item_id");
 				int quantity = resultSet.getInt("quantity");
 				double totalPrice = resultSet.getDouble("total_price");

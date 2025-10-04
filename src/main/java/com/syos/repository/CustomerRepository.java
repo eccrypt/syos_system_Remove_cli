@@ -69,8 +69,4 @@ public class CustomerRepository {
 		}
 	}
 
-	public void clear() {
-		// TODO Auto-generated method stub
-
-	}
 }

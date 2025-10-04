@@ -6,9 +6,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Manages a pool of worker threads that process asynchronous requests
- */
 public class WorkerPool {
     private final ExecutorService executorService;
     private final List<RequestProcessor> processors;
@@ -20,29 +17,18 @@ public class WorkerPool {
         this.requestQueue = requestQueue;
         this.processors = new ArrayList<>(processors);
 
-        // Start worker threads
         for (int i = 0; i < poolSize; i++) {
             executorService.submit(new Worker(i));
         }
     }
-
-    /**
-     * Submit a request for processing
-     */
     public boolean submitRequest(AsyncRequest request) {
         return requestQueue.offer(request);
     }
 
-    /**
-     * Submit a request with timeout
-     */
     public boolean submitRequest(AsyncRequest request, long timeout) throws InterruptedException {
         return requestQueue.offer(request, timeout);
     }
 
-    /**
-     * Shutdown the worker pool
-     */
     public void shutdown() {
         running = false;
         executorService.shutdown();
@@ -56,32 +42,18 @@ public class WorkerPool {
         }
     }
 
-    /**
-     * Get the number of active threads
-     */
     public int getActiveCount() {
-        // This is a simplified implementation
-        // In a real implementation, you'd track active workers
         return ((java.util.concurrent.ThreadPoolExecutor) executorService).getActiveCount();
     }
 
-    /**
-     * Get queue size
-     */
     public int getQueueSize() {
         return requestQueue.size();
     }
 
-    /**
-     * Check if pool is running
-     */
     public boolean isRunning() {
         return running && !executorService.isShutdown();
     }
 
-    /**
-     * Worker thread that processes requests
-     */
     private class Worker implements Runnable {
         private final int workerId;
 
@@ -95,8 +67,7 @@ public class WorkerPool {
 
             while (running && !Thread.currentThread().isInterrupted()) {
                 try {
-                    // Poll for requests with a timeout
-                    AsyncRequest request = requestQueue.poll(1000); // 1 second timeout
+                    AsyncRequest request = requestQueue.poll(1000); 
 
                     if (request != null) {
                         processRequest(request);
@@ -118,7 +89,6 @@ public class WorkerPool {
             long startTime = System.currentTimeMillis();
 
             try {
-                // Find the appropriate processor
                 RequestProcessor processor = findProcessor(request.getRequestType());
 
                 if (processor != null) {

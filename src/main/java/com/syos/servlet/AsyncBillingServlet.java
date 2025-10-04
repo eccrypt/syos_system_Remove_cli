@@ -67,18 +67,14 @@ public class AsyncBillingServlet extends HttpServlet {
 
     private void handleAsyncBillHistory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
-        // Prepare request parameters
         Map<String, Object> params = new HashMap<>();
         params.put("action", "GET_BILL_HISTORY");
         params.put("userId", request.getSession().getAttribute("userId"));
 
-        // Submit async request
         CompletableFuture<AsyncResponse> future = asyncManager.submitRequest("BILLING", params);
 
-        // Handle response
         try {
-            AsyncResponse asyncResponse = future.get(); // Blocking for demo
+            AsyncResponse asyncResponse = future.get();
             response.setContentType("application/json");
 
             if (asyncResponse.isSuccess()) {
@@ -97,8 +93,6 @@ public class AsyncBillingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Return queue statistics
         AsyncProcessorManager.QueueStats stats = asyncManager.getQueueStats();
         response.setContentType("application/json");
         response.getWriter().write(String.format(

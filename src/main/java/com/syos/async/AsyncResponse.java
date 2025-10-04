@@ -1,8 +1,5 @@
 package com.syos.async;
 
-/**
- * Represents the response from an asynchronous request processing
- */
 public class AsyncResponse {
     private final String requestId;
     private final boolean success;

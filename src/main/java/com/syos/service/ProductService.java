@@ -38,9 +38,8 @@ public class ProductService {
 	            throw new IllegalArgumentException("Product with code " + code + " not found.");
 	        }
 
-	        // Update only the name
 	        existingProduct.setName(newName);
-	        productRepository.update(existingProduct); // The update method in repository should handle only name change now
+	        productRepository.update(existingProduct); 
 	        return existingProduct;
 	    }
 

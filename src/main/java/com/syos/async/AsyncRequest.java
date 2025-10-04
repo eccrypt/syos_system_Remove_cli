@@ -3,9 +3,6 @@ package com.syos.async;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Represents an asynchronous request that can be queued and processed by worker threads
- */
 public class AsyncRequest {
     private final String requestId;
     private final String requestType;

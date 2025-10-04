@@ -113,10 +113,8 @@ public class StoreBillingServlet extends HttpServlet {
             double cashTendered = Double.parseDouble(cashStr);
 
             Bill savedBill = billingService.processPayment(billItems, cashTendered);
-
-            // Clear session
             session.removeAttribute("billItems");
-
+            
             request.setAttribute("bill", savedBill);
             request.getRequestDispatcher("/billReceipt.jsp").forward(request, response);
 

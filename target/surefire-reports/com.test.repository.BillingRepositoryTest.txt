@@ -1,0 +1,159 @@
+-------------------------------------------------------------------------------
+Test set: com.test.repository.BillingRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 2, Errors: 4, Skipped: 0, Time elapsed: 0.859 s <<< FAILURE! -- in com.test.repository.BillingRepositoryTest
+com.test.repository.BillingRepositoryTest.nextSerial_noExistingBills_returnsOne -- Time elapsed: 0.749 s <<< ERROR!
+org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'prepareStatement' method:
+    mockConnection.prepareStatement(
+    "SELECT COALESCE(MAX(serial_number), 0) + 1
+  FROM bill
+ WHERE DATE(bill_date) = CURRENT_DATE
+"
+);
+    -> at com.syos.repository.BillingRepository.nextSerial(BillingRepository.java:137)
+ - has following stubbing(s) with different arguments:
+    1. mockConnection.prepareStatement("");
+      -> at com.test.repository.BillingRepositoryTest.nextSerial_noExistingBills_returnsOne(BillingRepositoryTest.java:231)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.syos.repository.BillingRepository.nextSerial(BillingRepository.java:137)
+	at com.test.repository.BillingRepositoryTest.nextSerial_noExistingBills_returnsOne(BillingRepositoryTest.java:238)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.test.repository.BillingRepositoryTest.nextSerial_existingBills_returnsMaxPlusOne -- Time elapsed: 0.010 s <<< ERROR!
+org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'prepareStatement' method:
+    mockConnection.prepareStatement(
+    "SELECT COALESCE(MAX(serial_number), 0) + 1
+  FROM bill
+ WHERE DATE(bill_date) = CURRENT_DATE
+"
+);
+    -> at com.syos.repository.BillingRepository.nextSerial(BillingRepository.java:137)
+ - has following stubbing(s) with different arguments:
+    1. mockConnection.prepareStatement("");
+      -> at com.test.repository.BillingRepositoryTest.nextSerial_existingBills_returnsMaxPlusOne(BillingRepositoryTest.java:206)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.syos.repository.BillingRepository.nextSerial(BillingRepository.java:137)
+	at com.test.repository.BillingRepositoryTest.nextSerial_existingBills_returnsMaxPlusOne(BillingRepositoryTest.java:213)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.test.repository.BillingRepositoryTest.save_validBillWithItems_commitsTransaction -- Time elapsed: 0.029 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+2 matchers expected, 1 recorded:
+-> at com.test.repository.BillingRepositoryTest.save_validBillWithItems_commitsTransaction(BillingRepositoryTest.java:108)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.test.repository.BillingRepositoryTest.save_validBillWithItems_commitsTransaction(BillingRepositoryTest.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.test.repository.BillingRepositoryTest.save_itemSaveFails_rollbacksTransaction -- Time elapsed: 0.024 s <<< FAILURE!
+Wanted but not invoked:
+mockConnection.rollback();
+-> at com.test.repository.BillingRepositoryTest.save_itemSaveFails_rollbacksTransaction(BillingRepositoryTest.java:194)
+
+However, there were exactly 4 interactions with this mock:
+mockConnection.setAutoCommit(false);
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:32)
+
+mockConnection.prepareStatement(
+    "INSERT INTO bill
+  (serial_number, bill_date, total_amount, cash_tendered, change_returned, transaction_type)
+VALUES (?, ?, ?, ?, ?, ?)
+RETURNING id
+"
+);
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:35)
+
+mockConnection.prepareStatement(
+    "INSERT INTO bill_item (bill_id, product_code, quantity, total_price, discount_amount)
+VALUES (?, ?, ?, ?, ?)
+"
+);
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:52)
+
+mockConnection.close();
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:31)
+
+
+	at com.test.repository.BillingRepositoryTest.save_itemSaveFails_rollbacksTransaction(BillingRepositoryTest.java:194)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.test.repository.BillingRepositoryTest.nextSerial_queryFails_throwsRuntimeException -- Time elapsed: 0.012 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.test.repository.BillingRepositoryTest.setUp(BillingRepositoryTest.java:62)
+  2. -> at com.test.repository.BillingRepositoryTest.setUp(BillingRepositoryTest.java:63)
+  3. -> at com.test.repository.BillingRepositoryTest.setUp(BillingRepositoryTest.java:64)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.test.repository.BillingRepositoryTest.save_billSaveFails_rollbacksTransaction -- Time elapsed: 0.012 s <<< FAILURE!
+Wanted but not invoked:
+mockConnection.rollback();
+-> at com.test.repository.BillingRepositoryTest.save_billSaveFails_rollbacksTransaction(BillingRepositoryTest.java:161)
+
+However, there were exactly 3 interactions with this mock:
+mockConnection.setAutoCommit(false);
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:32)
+
+mockConnection.prepareStatement(
+    "INSERT INTO bill
+  (serial_number, bill_date, total_amount, cash_tendered, change_returned, transaction_type)
+VALUES (?, ?, ?, ?, ?, ?)
+RETURNING id
+"
+);
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:35)
+
+mockConnection.close();
+-> at com.syos.repository.BillingRepository.save(BillingRepository.java:31)
+
+
+	at com.test.repository.BillingRepositoryTest.save_billSaveFails_rollbacksTransaction(BillingRepositoryTest.java:161)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

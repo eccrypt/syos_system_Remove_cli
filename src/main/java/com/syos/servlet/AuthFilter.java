@@ -44,15 +44,11 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-
-        // Check if user is logged in
         HttpSession session = httpRequest.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             httpResponse.sendRedirect(contextPath + "/login");
             return;
         }
-
-        // Validate session user still exists in database
         try {
             String userId = (String) session.getAttribute("userId");
             User dbUser = authService.findUserById(userId);
@@ -61,20 +57,13 @@ public class AuthFilter implements Filter {
                 httpResponse.sendRedirect(contextPath + "/login");
                 return;
             }
-
-            // Update session with fresh user data
             session.setAttribute("user", dbUser);
             session.setAttribute("userRole", dbUser.getRole().toString());
 
         } catch (SQLException e) {
-            // If database error, allow access but log error
             System.err.println("Database error during auth validation: " + e.getMessage());
         }
-
-        // Role-based access control
         UserType userRole = UserType.valueOf((String) session.getAttribute("userRole"));
-
-        // Define role permissions
         if (!hasAccess(userRole, path)) {
             httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. Insufficient privileges.");
             return;
@@ -84,14 +73,10 @@ public class AuthFilter implements Filter {
     }
 
     private boolean hasAccess(UserType userRole, String path) {
-        // ADMIN has access to everything
         if (userRole == UserType.ADMIN) {
             return true;
         }
-
-        // STAFF has limited access
         if (userRole == UserType.STAFF) {
-            // Staff can access billing and inventory operations
             return path.startsWith("/billing") ||
                    path.startsWith("/inventory") ||
                    path.equals("/") ||
@@ -99,12 +84,13 @@ public class AuthFilter implements Filter {
                    path.startsWith("/logout");
         }
 
-        // Default deny
         return false;
     }
 
     @Override
     public void destroy() {
-        // Cleanup if needed
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'destroy'");
     }
+
 }

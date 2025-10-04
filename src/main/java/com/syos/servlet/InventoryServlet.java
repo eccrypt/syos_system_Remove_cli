@@ -205,7 +205,6 @@ public class InventoryServlet extends HttpServlet {
         String productCode = request.getParameter("productCode");
         String quantityStr = request.getParameter("quantity");
         if (daysStr != null) {
-            // First step: show list
             int days = Integer.parseInt(daysStr);
             StockService stockService = new StockService();
             List<String> products = stockService.getAllProductCodesWithExpiringBatches(days);
@@ -214,7 +213,6 @@ public class InventoryServlet extends HttpServlet {
             request.setAttribute("stockService", stockService);
             request.getRequestDispatcher("/removeExpiryStock.jsp").forward(request, response);
         } else if (productCode != null && quantityStr != null) {
-            // Second step: remove
             int quantity = Integer.parseInt(quantityStr);
             try {
                 StockService stockService = new StockService();
@@ -247,7 +245,6 @@ public class InventoryServlet extends HttpServlet {
         String batchIdStr = request.getParameter("batchId");
         String quantityStr = request.getParameter("quantity");
         if (daysStr != null && batchIdStr == null) {
-            // First step: show list
             int days = Integer.parseInt(daysStr);
             StockService stockService = new StockService();
             List<StockBatch> batches = stockService.getAllExpiringBatches(days);
@@ -255,7 +252,6 @@ public class InventoryServlet extends HttpServlet {
             request.setAttribute("days", days);
             request.getRequestDispatcher("/discardExpiringBatches.jsp").forward(request, response);
         } else if (batchIdStr != null && quantityStr != null && daysStr != null) {
-            // Second step: discard
             int batchId = Integer.parseInt(batchIdStr);
             int quantity = Integer.parseInt(quantityStr);
             int days = Integer.parseInt(daysStr);

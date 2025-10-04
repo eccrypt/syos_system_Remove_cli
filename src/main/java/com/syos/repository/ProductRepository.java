@@ -12,7 +12,6 @@ import com.syos.model.Product;
 
 public class ProductRepository {
 
-	// find one product by its code
 	public Product findByCode(String code) {
 		String sql = "SELECT code, name, price FROM product WHERE code = ?";
 		try (Connection connection = DatabaseManager.getInstance().getConnection();
@@ -30,7 +29,6 @@ public class ProductRepository {
 		return null;
 	}
 
-	// Load all products from the product table
 	public List<Product> findAll() {
 		String sql = "SELECT code, name, price FROM product";
 		List<Product> products = new ArrayList<>();
@@ -81,12 +79,6 @@ public class ProductRepository {
 		}
 	}
 
-	public void clear() {
-		// TODO Auto-generated method stub
-
-	}
-
-	// Load products that have active discounts
 	public List<Product> findProductsWithActiveDiscounts(java.time.LocalDate date) {
 		String sql = """
 				SELECT DISTINCT p.code, p.name, p.price

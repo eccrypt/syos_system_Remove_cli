@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
-
 import com.syos.db.DatabaseManager;
 import com.syos.enums.UserType;
 import com.syos.model.Admin;
@@ -85,7 +83,7 @@ public class UserRepository {
             preparedStatement.setString(3, firstName);
             preparedStatement.setString(4, lastName);
             preparedStatement.setString(5, user.getRole().toString());
-            preparedStatement.setString(6, user.getPassword()); // plain text password
+            preparedStatement.setString(6, user.getPassword()); 
 
             preparedStatement.executeUpdate();
         }

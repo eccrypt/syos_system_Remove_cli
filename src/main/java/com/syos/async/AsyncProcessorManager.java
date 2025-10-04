@@ -5,9 +5,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Singleton manager for asynchronous request processing
- */
 public class AsyncProcessorManager {
     private static AsyncProcessorManager instance;
 
@@ -15,21 +12,13 @@ public class AsyncProcessorManager {
     private final RequestQueue requestQueue;
 
     private AsyncProcessorManager() {
-        // Initialize with default settings
         int queueCapacity = 1000;
         int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
-
         this.requestQueue = new RequestQueue(queueCapacity);
-
-        // Create processors
         List<RequestProcessor> processors = List.of(
             new com.syos.async.processor.BillingRequestProcessor()
-            // Add more processors here as we implement them
         );
-
         this.workerPool = new WorkerPool(poolSize, requestQueue, processors);
-
-        // Add shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
@@ -40,12 +29,6 @@ public class AsyncProcessorManager {
         return instance;
     }
 
-    /**
-     * Submit an asynchronous request for processing
-     * @param requestType The type of request
-     * @param parameters Request parameters
-     * @return A CompletableFuture for the response
-     */
     public CompletableFuture<AsyncResponse> submitRequest(String requestType, java.util.Map<String, Object> parameters) {
         String requestId = UUID.randomUUID().toString();
         AsyncRequest request = new AsyncRequest(requestId, requestType, parameters);
@@ -59,13 +42,6 @@ public class AsyncProcessorManager {
         }
     }
 
-    /**
-     * Submit an asynchronous request with timeout
-     * @param requestType The type of request
-     * @param parameters Request parameters
-     * @param timeout Timeout in milliseconds
-     * @return A CompletableFuture for the response
-     */
     public CompletableFuture<AsyncResponse> submitRequest(String requestType,
                                                          java.util.Map<String, Object> parameters,
                                                          long timeout) {
@@ -88,9 +64,6 @@ public class AsyncProcessorManager {
         }
     }
 
-    /**
-     * Get queue statistics
-     */
     public QueueStats getQueueStats() {
         return new QueueStats(
             requestQueue.size(),
@@ -100,18 +73,12 @@ public class AsyncProcessorManager {
         );
     }
 
-    /**
-     * Shutdown the async processor
-     */
     public void shutdown() {
         System.out.println("Shutting down AsyncProcessorManager...");
         workerPool.shutdown();
         System.out.println("AsyncProcessorManager shutdown complete");
     }
 
-    /**
-     * Statistics about the queue and workers
-     */
     public static class QueueStats {
         public final int queueSize;
         public final int remainingCapacity;

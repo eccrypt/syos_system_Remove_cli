@@ -12,9 +12,9 @@ class CustomerBuilderTest {
 	@DisplayName("Should successfully build a Customer object when all fields are provided")
 	void build_allFieldsProvided_success() {
 		// Arrange
-		String expectedFirstName = "John";
-		String expectedLastName = "Doe";
-		String expectedEmail = "john.doe@example.com";
+		String expectedFirstName = "Black";
+		String expectedLastName = "White";
+		String expectedEmail = "black.white@example.com";
 		String expectedPassword = "securePassword123";
 
 		// Act
@@ -35,7 +35,7 @@ class CustomerBuilderTest {
 	@DisplayName("Should throw IllegalStateException if first name is not provided")
 	void build_missingFirstName_throwsException() {
 		// Arrange
-		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().lastName("Doe").email("john.doe@example.com")
+		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().lastName("White").email("black.white@example.com")
 				.password("securePassword123");
 
 		// Act & Assert
@@ -49,8 +49,8 @@ class CustomerBuilderTest {
 	@DisplayName("Should throw IllegalStateException if last name is not provided")
 	void build_missingLastName_throwsException() {
 		// Arrange
-		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("John")
-				.email("john.doe@example.com").password("securePassword123");
+		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("Black")
+				.email("black.white@example.com").password("securePassword123");
 
 		// Act & Assert
 		IllegalStateException exception = assertThrows(IllegalStateException.class, builder::build,
@@ -63,7 +63,7 @@ class CustomerBuilderTest {
 	@DisplayName("Should throw IllegalStateException if email is not provided")
 	void build_missingEmail_throwsException() {
 		// Arrange
-		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("John").lastName("Doe")
+		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("Black").lastName("White")
 				.password("securePassword123");
 
 		// Act & Assert
@@ -77,8 +77,8 @@ class CustomerBuilderTest {
 	@DisplayName("Should throw IllegalStateException if password is not provided")
 	void build_missingPassword_throwsException() {
 		// Arrange
-		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("John").lastName("Doe")
-				.email("john.doe@example.com");
+		Customer.CustomerBuilder builder = new Customer.CustomerBuilder().firstName("Black").lastName("White")
+				.email("black.white@example.com");
 
 		// Act & Assert
 		IllegalStateException exception = assertThrows(IllegalStateException.class, builder::build,

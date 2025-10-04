@@ -7,8 +7,6 @@ import com.syos.service.WebStoreBillingService;
 
 import java.util.Map;
 
-//Processor for billing-related asynchronous requests
-
 public class BillingRequestProcessor implements RequestProcessor {
 
     private final WebStoreBillingService billingService;
@@ -48,8 +46,6 @@ public class BillingRequestProcessor implements RequestProcessor {
 
     private AsyncResponse processBill(AsyncRequest request, Map<String, Object> params, long startTime) {
         try {
-            // Extract bill processing parameters
-            @SuppressWarnings("unchecked")
             java.util.List<com.syos.model.BillItem> billItems = (java.util.List<com.syos.model.BillItem>) params.get("billItems");
             Double cashTendered = (Double) params.get("cashTendered");
 
@@ -57,11 +53,8 @@ public class BillingRequestProcessor implements RequestProcessor {
                 return AsyncResponse.error(request.getRequestId(),
                     "No bill items provided").processingTime(System.currentTimeMillis() - startTime).build();
             }
-
-            // Process payment using the service
             com.syos.model.Bill bill = billingService.processPayment(billItems, cashTendered);
 
-            // Simulate additional processing time
             Thread.sleep(50);
 
             return AsyncResponse.success(request.getRequestId(),
