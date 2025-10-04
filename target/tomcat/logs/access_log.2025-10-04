@@ -129,3 +129,16 @@
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:32:39 +0530] "GET /discountManagement.jsp HTTP/1.1" 200 12852 http-bio-8080-exec-10 832
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:32:43 +0530] "GET /inventory.jsp HTTP/1.1" 200 2097 http-bio-8080-exec-10 174
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:32:44 +0530] "GET /index.jsp HTTP/1.1" 200 3694 http-bio-8080-exec-10 84
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:47:50 +0530] "GET /index.jsp HTTP/1.1" 302 - http-bio-8080-exec-1 55
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:47:51 +0530] "GET /login HTTP/1.1" 200 2869 http-bio-8080-exec-3 987
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:09 +0530] "POST /login HTTP/1.1" 302 - http-bio-8080-exec-4 412
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:10 +0530] "GET /index.jsp HTTP/1.1" 200 3694 http-bio-8080-exec-5 225
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:13 +0530] "GET /billing HTTP/1.1" 200 7783 http-bio-8080-exec-6 1806
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:19 +0530] "GET /onlineStore HTTP/1.1" 200 1205 http-bio-8080-exec-7 388
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:21 +0530] "GET /index.jsp HTTP/1.1" 200 3694 http-bio-8080-exec-8 87
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:22 +0530] "GET /inventory HTTP/1.1" 200 2097 http-bio-8080-exec-9 250
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:24 +0530] "GET /productManagement.jsp HTTP/1.1" 200 14383 http-bio-8080-exec-10 949
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:28 +0530] "GET /inventory.jsp HTTP/1.1" 200 2097 http-bio-8080-exec-10 209
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:31 +0530] "GET /stockManagement.jsp HTTP/1.1" 200 28781 http-bio-8080-exec-3 2279
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:43 +0530] "GET /inventory.jsp HTTP/1.1" 200 2097 http-bio-8080-exec-3 156
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:10:48:44 +0530] "GET /discountManagement.jsp HTTP/1.1" 200 12852 http-bio-8080-exec-3 434

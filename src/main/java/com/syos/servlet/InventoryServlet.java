@@ -2,12 +2,7 @@ package com.syos.servlet;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +21,7 @@ import com.syos.enums.DiscountType;
 @WebServlet("/inventory")
 public class InventoryServlet extends HttpServlet {
     public InventoryServlet() {
-        // Initialize any required services if needed
+    
     }
 
     @Override

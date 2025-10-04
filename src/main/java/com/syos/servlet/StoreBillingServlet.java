@@ -36,7 +36,6 @@ public class StoreBillingServlet extends HttpServlet {
 
         request.setAttribute("billItems", billItems);
 
-        // Provide products that are on shelf and have available (non-expired) stock
         List<String> productCodes = billingService.getAvailableProductCodes();
         List<Product> products = new ArrayList<>();
         for (String code : productCodes) {
