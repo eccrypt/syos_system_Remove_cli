@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.syos.singleton.InventoryManager" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    InventoryManager inventoryManager = InventoryManager.getInstance(null);
+    List<String> productCodes = inventoryManager.getAllProductCodes();
+    request.setAttribute("productCodes", productCodes);
+    request.setAttribute("inventoryManager", inventoryManager);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,10 +84,6 @@
         <div class="card">
             <div class="card-header">
                 <h5>All Inventory Stocks</h5>
-                <form action="inventory" method="post" class="d-inline">
-                    <input type="hidden" name="action" value="viewAllInventoryStocks">
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Refresh</button>
-                </form>
             </div>
             <div class="card-body">
                 <c:if test="${not empty productCodes}">
