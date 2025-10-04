@@ -50,6 +50,20 @@ public class StoreBillingServlet extends HttpServlet {
         }
 
         request.setAttribute("billItems", billItems);
+
+        // Provide products that are on shelf and have available (non-expired) stock
+        List<String> productCodes = shelfStockRepository.getAllProductCodes();
+        List<Product> products = new ArrayList<>();
+        for (String code : productCodes) {
+            if (inventoryManager.getAvailableStock(code) > 0) {
+                Product product = productRepository.findByCode(code);
+                if (product != null) {
+                    products.add(product);
+                }
+            }
+        }
+        request.setAttribute("products", products);
+
         request.getRequestDispatcher("/billing.jsp").forward(request, response);
     }
 

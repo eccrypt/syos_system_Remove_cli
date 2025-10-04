@@ -16,7 +16,45 @@
         <p style="color: green;">${message}</p>
     </c:if>
 
-    <h2>Add Item to Bill</h2>
+    <h2>Search Product</h2>
+    <form action="billing" method="get">
+        <label>Product Code or Name: <input type="text" name="search" value="${param.search}"></label>
+        <input type="submit" value="Search">
+    </form>
+
+    <h2>Products</h2>
+    <c:if test="${not empty products}">
+        <table border="1">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            <c:forEach var="product" items="${products}">
+                <c:if test="${empty param.search or product.code.contains(param.search) or product.name.toLowerCase().contains(param.search.toLowerCase())}">
+                    <tr>
+                        <td>${product.code}</td>
+                        <td>${product.name}</td>
+                        <td>${product.price}</td>
+                        <td>
+                            <form action="billing" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="productCode" value="${product.code}">
+                                <label>Qty: <input type="number" name="quantity" value="1" min="1" required></label>
+                                <input type="submit" value="Add to Bill">
+                            </form>
+                        </td>
+                    </tr>
+                </c:if>
+            </c:forEach>
+        </table>
+    </c:if>
+    <c:if test="${empty products}">
+        <p>No products available.</p>
+    </c:if>
+
+    <h2>Add Item by Code</h2>
     <form action="billing" method="post">
         <input type="hidden" name="action" value="add">
         <label>Product Code: <input type="text" name="productCode" required></label><br>
