@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.syos.model.Product;
-import com.syos.repository.ProductRepository;
+import com.syos.service.ProductService;
 
 @WebServlet("/onlineStore")
 public class OnlineStoreServlet extends HttpServlet {
-    private final ProductRepository productRepository = new ProductRepository();
+    private final ProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productService.getAllProducts();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/onlineStore.jsp").forward(request, response);
     }
@@ -28,7 +28,7 @@ public class OnlineStoreServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String code = request.getParameter("code");
-        Product product = productRepository.findByCode(code);
+        Product product = productService.findProductByCode(code);
         request.setAttribute("searchedProduct", product);
         doGet(request, response);
     }

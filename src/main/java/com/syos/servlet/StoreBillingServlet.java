@@ -11,31 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.syos.factory.BillItemFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
 import com.syos.model.Product;
-import com.syos.model.ShelfStock;
-import com.syos.repository.BillingRepository;
-import com.syos.repository.ProductRepository;
-import com.syos.repository.ShelfStockRepository;
-import com.syos.singleton.InventoryManager;
-import com.syos.strategy.DiscountPricingStrategy;
-import com.syos.strategy.ExpiryAwareFifoStrategy;
-import com.syos.strategy.NoDiscountStrategy;
+import com.syos.service.WebStoreBillingService;
 
 @WebServlet("/billing")
 public class StoreBillingServlet extends HttpServlet {
-    private final BillingRepository billRepository = new BillingRepository();
-    private final ProductRepository productRepository = new ProductRepository();
-    private final ShelfStockRepository shelfStockRepository = new ShelfStockRepository(productRepository);
-    private final BillItemFactory billItemFactory = new BillItemFactory(
-            new DiscountPricingStrategy(new NoDiscountStrategy()));
-    private final InventoryManager inventoryManager;
+    private final WebStoreBillingService billingService;
 
     public StoreBillingServlet() {
-        // Ensure InventoryManager singleton is initialized with strategy
-        this.inventoryManager = InventoryManager.getInstance(new ExpiryAwareFifoStrategy());
+        this.billingService = new WebStoreBillingService();
     }
 
     @Override
@@ -51,14 +37,12 @@ public class StoreBillingServlet extends HttpServlet {
         request.setAttribute("billItems", billItems);
 
         // Provide products that are on shelf and have available (non-expired) stock
-        List<String> productCodes = shelfStockRepository.getAllProductCodes();
+        List<String> productCodes = billingService.getAvailableProductCodes();
         List<Product> products = new ArrayList<>();
         for (String code : productCodes) {
-            if (inventoryManager.getAvailableStock(code) > 0) {
-                Product product = productRepository.findByCode(code);
-                if (product != null) {
-                    products.add(product);
-                }
+            Product product = billingService.getProductByCode(code);
+            if (product != null) {
+                products.add(product);
             }
         }
         request.setAttribute("products", products);
@@ -102,40 +86,13 @@ public class StoreBillingServlet extends HttpServlet {
                 return;
             }
 
-            ShelfStock shelf = shelfStockRepository.findByCode(productCode);
-            if (shelf == null) {
-                request.setAttribute("error", "Product code not found on shelf.");
-                doGet(request, response);
-                return;
-            }
-
-            Product product = productRepository.findByCode(productCode);
-            if (product == null) {
-                request.setAttribute("error", "Product code not found.");
-                doGet(request, response);
-                return;
-            }
-
-            int availableStock = inventoryManager.getAvailableStock(productCode);
-            if (availableStock == 0) {
-                request.setAttribute("error", "Product out of stock.");
-                doGet(request, response);
-                return;
-            }
-
-            if (quantity > availableStock) {
-                request.setAttribute("error", "Insufficient stock. Available: " + availableStock);
-                doGet(request, response);
-                return;
-            }
-
-            BillItem item = billItemFactory.create(product, quantity);
+            BillItem item = billingService.addItemToBill(productCode, quantity);
             billItems.add(item);
             request.setAttribute("message", "Added " + quantity + " x " + item.getProduct().getName());
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid quantity.");
         } catch (Exception e) {
-            request.setAttribute("error", "Error adding product.");
+            request.setAttribute("error", "Error adding product: " + e.getMessage());
         }
 
         doGet(request, response);
@@ -155,38 +112,20 @@ public class StoreBillingServlet extends HttpServlet {
         String cashStr = request.getParameter("cashTendered");
         try {
             double cashTendered = Double.parseDouble(cashStr);
-            double totalDue = billItems.stream().mapToDouble(BillItem::getTotalPrice).sum();
 
-            if (cashTendered < totalDue) {
-                request.setAttribute("error", "Cash tendered is less than total due.");
-                doGet(request, response);
-                return;
-            }
+            Bill savedBill = billingService.processPayment(billItems, cashTendered);
 
-            // Process bill synchronously
-            int serialNumber = billRepository.nextSerial();
-            Bill bill = new Bill.BillBuilder(serialNumber, billItems)
-                .withCashTendered(cashTendered)
-                .build();
-
-            // Save bill to database
-            billRepository.save(bill);
-
-            // Deduct from inventory
-            for (BillItem item : billItems) {
-                inventoryManager.deductFromShelf(item.getProduct().getCode(), item.getQuantity());
-            }
-
-            // Clear session and retrieve the saved bill with joined product data
+            // Clear session
             session.removeAttribute("billItems");
 
-            // Retrieve the complete bill with joined product information
-            Bill savedBill = billRepository.findById(bill.getId());
             request.setAttribute("bill", savedBill);
             request.getRequestDispatcher("/billReceipt.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid cash amount.");
+            doGet(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error processing payment: " + e.getMessage());
             doGet(request, response);
         }
     }

@@ -48,4 +48,8 @@ public class StockService {
     public int getAvailableStock(String productCode) {
         return inventoryManager.getAvailableStock(productCode);
     }
+
+    public void removeQuantityFromShelf(String productCode, int quantity) {
+        inventoryManager.removeQuantityFromShelf(productCode, quantity);
+    }
 }
