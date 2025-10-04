@@ -15,9 +15,9 @@
     <c:if test="${not empty expiringProducts}">
         <ul>
             <c:forEach var="productCode" items="${expiringProducts}">
-                <li>${productCode} (Shelf Qty: ${inventoryManager.getQuantityOnShelf(productCode)})</li>
+                <li>${productCode} (Shelf Qty: ${stockService.getQuantityOnShelf(productCode)})</li>
                 <ul>
-                    <c:forEach var="batch" items="${inventoryManager.getExpiringBatchesForProduct(productCode, days)}">
+                    <c:forEach var="batch" items="${stockService.getExpiringBatchesForProduct(productCode, days)}">
                         <li>Batch ID: ${batch.id}, Exp. Date: ${batch.expiryDate}, Remaining Qty: ${batch.quantityRemaining}</li>
                     </c:forEach>
                 </ul>

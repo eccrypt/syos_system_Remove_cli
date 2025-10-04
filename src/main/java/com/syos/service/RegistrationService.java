@@ -8,7 +8,6 @@ public abstract class RegistrationService<T extends User> {
 	public final T register(CustomerRegisterRequestDTO customerRegisterRequestDTO) {
 		validate(customerRegisterRequestDTO);
 		checkUnique(customerRegisterRequestDTO);
-		@SuppressWarnings("unchecked")
 		T user = (T) createUser(customerRegisterRequestDTO);
 		save(user);
 		postRegister(user);

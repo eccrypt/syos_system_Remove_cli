@@ -52,4 +52,8 @@ public class StockService {
     public void removeQuantityFromShelf(String productCode, int quantity) {
         inventoryManager.removeQuantityFromShelf(productCode, quantity);
     }
+
+    public List<StockBatch> getExpiringBatchesForProduct(String productCode, int days) {
+        return inventoryManager.getExpiringBatchesForProduct(productCode, days);
+    }
 }

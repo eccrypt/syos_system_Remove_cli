@@ -23,8 +23,8 @@
             <th>Batch Rem. Qty</th>
         </tr>
         <c:forEach var="productCode" items="${productCodes}">
-            <c:set var="quantityOnShelf" value="${inventoryManager.getQuantityOnShelf(productCode)}" />
-            <c:set var="batches" value="${inventoryManager.getBatchesForProduct(productCode)}" />
+            <c:set var="quantityOnShelf" value="${stockService.getQuantityOnShelf(productCode)}" />
+            <c:set var="batches" value="${stockService.getBatchesForProduct(productCode)}" />
             <c:if test="${batches.isEmpty() && quantityOnShelf == 0}">
                 <tr>
                     <td>${productCode}</td>

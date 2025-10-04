@@ -42,17 +42,6 @@
                     </div>
                     <% } %>
 
-                    <% if (isAdmin) { %>
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Online Store</h5>
-                                <p class="card-text">Manage online store operations</p>
-                                <a href="onlineStore" class="btn btn-primary">Access Online Store</a>
-                            </div>
-                        </div>
-                    </div>
-                    <% } %>
 
                     <% if (isAdmin || isStaff) { %>
                     <div class="col-md-6 col-lg-3 mb-4">

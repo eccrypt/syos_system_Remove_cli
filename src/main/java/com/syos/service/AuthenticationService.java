@@ -25,15 +25,11 @@ public class AuthenticationService {
     }
 
     public void registerUser(User user, String plainPassword) throws SQLException {
-        // Store plain text password
         User userWithPassword = createUserWithPassword(user, plainPassword);
         userRepository.save(userWithPassword, plainPassword);
     }
 
     private User createUserWithPassword(User originalUser, String password) {
-        // Create a new user instance with plain text password
-        // This is a bit tricky since User is abstract and has private constructor
-        // For now, we'll use reflection or create concrete instances
         if (originalUser instanceof com.syos.model.Admin) {
             com.syos.model.Admin admin = (com.syos.model.Admin) originalUser;
             return new com.syos.model.Admin(admin.getEmail(), password, admin.getName());
