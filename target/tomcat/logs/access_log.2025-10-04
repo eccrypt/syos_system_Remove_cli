@@ -39,3 +39,10 @@
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:04 +0530] "GET /discountManagement.jsp HTTP/1.1" 200 21915 http-bio-8080-exec-5 116
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:06 +0530] "GET /inventory.jsp HTTP/1.1" 200 2563 http-bio-8080-exec-5 145
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:07 +0530] "GET /productsWithDiscounts.jsp HTTP/1.1" 200 5793 http-bio-8080-exec-5 254
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:09 +0530] "GET /inventory.jsp HTTP/1.1" 200 2563 http-bio-8080-exec-5 50
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:10 +0530] "GET /index.jsp HTTP/1.1" 200 2869 http-bio-8080-exec-10 155
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:12 +0530] "GET /billing HTTP/1.1" 200 6367 http-bio-8080-exec-10 592
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:16 +0530] "GET /index.jsp HTTP/1.1" 200 2869 http-bio-8080-exec-10 159
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:17 +0530] "GET /reports HTTP/1.1" 200 3197 http-bio-8080-exec-10 56
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:19 +0530] "GET /index.jsp HTTP/1.1" 200 2869 http-bio-8080-exec-10 154
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:19:06:22 +0530] "GET /billing HTTP/1.1" 200 6367 http-bio-8080-exec-10 543
