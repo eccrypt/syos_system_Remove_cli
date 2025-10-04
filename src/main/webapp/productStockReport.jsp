@@ -9,9 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
-        <a href="reports.jsp" class="btn btn-secondary mb-4">Back to Reports Menu</a>
+        <a href="reports.jsp" class="btn btn-light mb-4">Back to Reports Menu</a>
 
         <h1 class="text-center mb-4">Product Stock Report (Combined Shelf & Inventory)</h1>
 
@@ -69,7 +69,7 @@
                 }
             %>
 
-            <div class="alert alert-info">
+            <div class="alert alert-dark">
                 <strong>Summary: <%= totalProducts %> Products | Total Shelf Quantity: <%= totalShelfQuantity %> | Total Inventory Quantity: <%= totalInventoryQuantity %></strong>
             </div>
         <%

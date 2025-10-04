@@ -6,10 +6,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <h1 class="text-center mb-4">Report Menu</h1>
-        <a href="index.jsp" class="btn btn-secondary mb-4">Back to Main Menu</a>
+        <a href="index.jsp" class="btn btn-light mb-4">Back to Main Menu</a>
 
         <div class="row g-4">
             <div class="col-md-6">
@@ -24,7 +24,7 @@
                                 <label class="form-label">Date (YYYY-MM-DD)</label>
                                 <input type="date" name="date" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Generate</button>
+                            <button type="submit" class="btn btn-dark">Generate</button>
                         </form>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <div class="card-body">
                         <form action="reports" method="post">
                             <input type="hidden" name="action" value="allTransactions">
-                            <button type="submit" class="btn btn-primary">Generate</button>
+                            <button type="submit" class="btn btn-dark">Generate</button>
                         </form>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <div class="card-body">
                         <form action="reports" method="post">
                             <input type="hidden" name="action" value="productStock">
-                            <button type="submit" class="btn btn-primary">Generate</button>
+                            <button type="submit" class="btn btn-dark">Generate</button>
                         </form>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <div class="card-body">
                         <form action="reports" method="post">
                             <input type="hidden" name="action" value="analysis">
-                            <button type="submit" class="btn btn-primary">Generate</button>
+                            <button type="submit" class="btn btn-dark">Generate</button>
                         </form>
                     </div>
                 </div>

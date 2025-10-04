@@ -23,16 +23,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <h1 class="text-center mb-4">Discount Management</h1>
-        <a href="inventory.jsp" class="btn btn-secondary mb-4">Back to Inventory Dashboard</a>
+        <a href="inventory.jsp" class="btn btn-light mb-4">Back to Inventory Dashboard</a>
 
         <c:if test="${not empty error}">
-            <div class="alert alert-danger">${error}</div>
+            <div class="alert alert-dark">${error}</div>
         </c:if>
         <c:if test="${not empty message}">
-            <div class="alert alert-success">${message}</div>
+            <div class="alert alert-dark">${message}</div>
         </c:if>
 
         <div class="row g-4 mb-4">
@@ -67,7 +67,7 @@
                                 <label class="form-label">End Date</label>
                                 <input type="date" name="endDate" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create Discount</button>
+                            <button type="submit" class="btn btn-dark">Create Discount</button>
                         </form>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                                 <label class="form-label">Discount ID</label>
                                 <input type="number" name="discountId" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-success">Assign Discount</button>
+                            <button type="submit" class="btn btn-dark">Assign Discount</button>
                         </form>
                         <form action="inventory" method="post">
                             <input type="hidden" name="action" value="unassignDiscount">
@@ -101,7 +101,7 @@
                                 <label class="form-label">Discount ID</label>
                                 <input type="number" name="discountId" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-warning">Unassign Discount</button>
+                            <button type="submit" class="btn btn-dark">Unassign Discount</button>
                         </form>
                     </div>
                 </div>

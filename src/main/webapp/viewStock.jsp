@@ -7,21 +7,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <div class="container py-5">
         <h1 class="text-center mb-4">Stock Details</h1>
-        <a href="inventory" class="btn btn-secondary mb-4">Back to Inventory Menu</a>
+        <a href="inventory" class="btn btn-light mb-4">Back to Inventory Menu</a>
 
         <div class="table-responsive">
             <table class="table table-striped">
-        <tr>
-            <th>Product Code</th>
-            <th>Shelf Qty</th>
-            <th>Batch ID</th>
-            <th>Purch. Date</th>
-            <th>Exp. Date</th>
-            <th>Batch Rem. Qty</th>
-        </tr>
+                <thead>
+                    <tr>
+                        <th>Product Code</th>
+                        <th>Shelf Qty</th>
+                        <th>Batch ID</th>
+                        <th>Purch. Date</th>
+                        <th>Exp. Date</th>
+                        <th>Batch Rem. Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
         <c:forEach var="productCode" items="${productCodes}">
             <c:set var="quantityOnShelf" value="${stockService.getQuantityOnShelf(productCode)}" />
             <c:set var="batches" value="${stockService.getBatchesForProduct(productCode)}" />
@@ -57,8 +60,10 @@
                     </tr>
                 </c:forEach>
             </c:if>
-        </c:forEach>
-    </table>
-    <p>Note: 'Shelf Qty' is the total quantity on the shelf. 'Batch Rem. Qty' is stock remaining in back-store batches.</p>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-muted mt-2">Note: 'Shelf Qty' is the total quantity on the shelf. 'Batch Rem. Qty' is stock remaining in back-store batches.</p>
+    </div>
 </body>
 </html>

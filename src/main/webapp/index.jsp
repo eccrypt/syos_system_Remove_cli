@@ -6,15 +6,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+<body class="bg-white">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">SYOS Billing System</a>
             <div class="d-flex">
                 <span class="navbar-text me-3">
                     Welcome, <%= session.getAttribute("userName") %> (<%= session.getAttribute("userRole") %>)
                 </span>
-                <a href="logout" class="btn btn-outline-light btn-sm">Logout</a>
+                <a href="logout" class="btn btn-outline-dark btn-sm">Logout</a>
             </div>
         </div>
     </nav>
@@ -36,7 +36,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Store Billing</h5>
                                 <p class="card-text">Process customer transactions and manage bills</p>
-                                <a href="billing" class="btn btn-primary">Access Billing</a>
+                                <a href="billing" class="btn btn-dark">Access Billing</a>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Inventory Management</h5>
                                 <p class="card-text">Manage products, stock, and shelf operations</p>
-                                <a href="inventory" class="btn btn-primary">Access Inventory</a>
+                                <a href="inventory" class="btn btn-dark">Access Inventory</a>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Reports</h5>
                                 <p class="card-text">Generate sales and inventory reports</p>
-                                <a href="reports" class="btn btn-primary">Access Reports</a>
+                                <a href="reports" class="btn btn-dark">Access Reports</a>
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                 </div>
 
                 <% if (!isAdmin && !isStaff) { %>
-                <div class="alert alert-warning text-center mt-4" role="alert">
+                <div class="alert alert-dark text-center mt-4" role="alert">
                     You don't have access to any modules. Please contact your administrator.
                 </div>
                 <% } %>
