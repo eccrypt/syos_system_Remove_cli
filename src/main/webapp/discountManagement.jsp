@@ -1,5 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.syos.repository.DiscountRepository" %>
+<%@ page import="com.syos.repository.ProductRepository" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.syos.model.Discount" %>
+<%@ page import="com.syos.model.Product" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    DiscountRepository discountRepository = new DiscountRepository();
+    ProductRepository productRepository = new ProductRepository();
+    List<Discount> discounts = discountRepository.findAll();
+    List<Product> products = productRepository.findAll();
+    LocalDate today = LocalDate.now();
+    request.setAttribute("discounts", discounts);
+    request.setAttribute("products", products);
+    request.setAttribute("discountRepository", discountRepository);
+    request.setAttribute("today", today);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -97,10 +114,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>All Discounts</h5>
-                        <form action="inventory" method="post" class="d-inline">
-                            <input type="hidden" name="action" value="viewAllDiscounts">
-                            <button type="submit" class="btn btn-outline-primary btn-sm">View</button>
-                        </form>
                     </div>
                     <div class="card-body">
                         <c:if test="${not empty discounts}">
@@ -142,10 +155,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Products with Discounts</h5>
-                        <form action="inventory" method="post" class="d-inline">
-                            <input type="hidden" name="action" value="viewAllProductsWithDiscounts">
-                            <button type="submit" class="btn btn-outline-primary btn-sm">View</button>
-                        </form>
                     </div>
                     <div class="card-body">
                         <c:set var="hasDiscounts" value="false" />
