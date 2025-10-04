@@ -39,13 +39,13 @@ public class WebStoreBillingService {
             throw new IllegalArgumentException("Product code not found.");
         }
 
-        int availableStock = stockService.getAvailableStock(productCode);
-        if (availableStock == 0) {
-            throw new IllegalArgumentException("Product out of stock.");
+        int availableNonExpiredStock = stockService.getAvailableNonExpiredStock(productCode);
+        if (availableNonExpiredStock == 0) {
+            throw new IllegalArgumentException("This product is expired or out of non-expired stock.");
         }
 
-        if (quantity > availableStock) {
-            throw new IllegalArgumentException("Insufficient stock. Available: " + availableStock);
+        if (quantity > availableNonExpiredStock) {
+            throw new IllegalArgumentException("Insufficient non-expired stock. Available: " + availableNonExpiredStock);
         }
 
         return billItemFactory.create(product, quantity);
@@ -76,7 +76,7 @@ public class WebStoreBillingService {
 
     public List<String> getAvailableProductCodes() {
         return shelfStockRepository.getAllProductCodes().stream()
-            .filter(code -> stockService.getAvailableStock(code) > 0)
+            .filter(code -> stockService.getAvailableNonExpiredStock(code) > 0)
             .toList();
     }
 

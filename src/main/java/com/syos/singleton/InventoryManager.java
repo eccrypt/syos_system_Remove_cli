@@ -268,6 +268,17 @@ public class InventoryManager {
 		return backStoreQty + shelfQty;
 	}
 
+	public int getAvailableNonExpiredStock(String productCode) {
+		LocalDate today = LocalDate.now();
+		int backStoreQty = batchRepository.findByProduct(productCode).stream()
+				.filter(batch -> batch.getExpiryDate().isAfter(today))
+				.mapToInt(StockBatch::getQuantityRemaining).sum();
+		int shelfQty = shelfRepository.getBatchesOnShelf(productCode).stream()
+				.filter(shelfBatch -> shelfBatch.getExpiryDate().isAfter(today))
+				.mapToInt(ShelfStock::getQuantity).sum();
+		return backStoreQty + shelfQty;
+	}
+
 	public void discardBatchQuantity(int batchId, int quantityToDiscard) {
 		StockBatch batch = batchRepository.findById(batchId);
 		if (batch == null) {

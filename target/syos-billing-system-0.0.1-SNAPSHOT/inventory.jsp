@@ -20,7 +20,7 @@
         </c:if>
 
         <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">Product Management</h5>
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">Stock Management</h5>
@@ -40,12 +40,22 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Discount Management</h5>
-                        <p class="card-text">Create and manage discounts for products.</p>
+                        <h5 class="card-title">Discounts</h5>
+                        <p class="card-text">Create, edit, and delete discounts.</p>
                         <a href="discountManagement.jsp" class="btn btn-dark">Manage Discounts</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Products with Discounts</h5>
+                        <p class="card-text">View and manage product discount assignments.</p>
+                        <a href="productsWithDiscounts.jsp" class="btn btn-dark">View Assignments</a>
                     </div>
                 </div>
             </div>

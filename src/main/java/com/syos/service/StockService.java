@@ -50,7 +50,11 @@ public class StockService {
     }
 
     public int getAvailableStock(String productCode) {
-        return inventoryManager.getAvailableStock(productCode);
+    	return inventoryManager.getAvailableStock(productCode);
+    }
+   
+    public int getAvailableNonExpiredStock(String productCode) {
+    	return inventoryManager.getAvailableNonExpiredStock(productCode);
     }
 
     public void removeQuantityFromShelf(String productCode, int quantity) {
