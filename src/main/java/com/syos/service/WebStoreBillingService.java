@@ -83,4 +83,8 @@ public class WebStoreBillingService {
     public Product getProductByCode(String code) {
         return productRepository.findByCode(code);
     }
+
+    public double getTodaySalesTotal() {
+        return billingRepository.getTodaySalesTotal();
+    }
 }

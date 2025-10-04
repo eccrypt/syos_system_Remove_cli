@@ -141,4 +141,22 @@ public class BillingRepository {
 		}
 		return 1;
 	}
+
+	public double getTodaySalesTotal() {
+		String sql = """
+				SELECT COALESCE(SUM(total_amount), 0)
+				  FROM bill
+				 WHERE DATE(bill_date) = CURRENT_DATE
+				""";
+		try (Connection connection = DatabaseManager.getInstance().getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+				ResultSet result = preparedStatement.executeQuery()) {
+			if (result.next()) {
+				return result.getDouble(1);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Error getting today's sales total", e);
+		}
+		return 0.0;
+	}
 }

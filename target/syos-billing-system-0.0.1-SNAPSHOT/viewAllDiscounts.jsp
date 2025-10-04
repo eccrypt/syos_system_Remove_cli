@@ -5,12 +5,16 @@
 <head>
     <title>All Discounts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-white">
-    <div class="container py-5">
-        <h1 class="text-center mb-4">All Available Discounts</h1>
-        <a href="inventory" class="btn btn-light mb-4">Back to Inventory Menu</a>
+    <%@ include file="sidebar.jsp" %>
+    <%@ include file="header.jsp" %>
+    <div class="d-flex">
+        <div style="margin-left: 250px; width: calc(100% - 250px);">
+            <div class="container py-5">
+                <h1 class="mb-4">All Available Discounts</h1>
 
         <c:if test="${empty discounts}">
             <p class="text-muted">No discounts have been created yet.</p>
@@ -43,6 +47,8 @@
                 </table>
             </div>
         </c:if>
+            </div>
+        </div>
     </div>
 </body>
 </html>
