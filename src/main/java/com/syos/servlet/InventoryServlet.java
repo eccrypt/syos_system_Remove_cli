@@ -117,15 +117,17 @@ public class InventoryServlet extends HttpServlet {
         String name = request.getParameter("name");
         String code = request.getParameter("code");
         String priceStr = request.getParameter("price");
+        String message = null;
+        String error = null;
         try {
             double price = Double.parseDouble(priceStr);
             ProductService productService = new ProductService();
             productService.addProduct(code, name, price);
-            request.setAttribute("message", "Product added successfully.");
+            message = "Product added successfully.";
         } catch (Exception e) {
-            request.setAttribute("error", "Error adding product: " + e.getMessage());
+            error = "Error adding product: " + e.getMessage();
         }
-        doGet(request, response);
+        handleResponse(request, response, message, error, "/productManagement.jsp");
     }
 
     private void handleViewProducts(HttpServletRequest request, HttpServletResponse response)

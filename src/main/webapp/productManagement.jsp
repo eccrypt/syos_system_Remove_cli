@@ -37,7 +37,7 @@
                 <h5>Add New Product</h5>
             </div>
             <div class="card-body">
-                <form action="inventory" method="post" class="row g-3">
+                <form id="addProductForm" class="row g-3">
                     <input type="hidden" name="action" value="addProduct">
                     <div class="col-md-4">
                         <label class="form-label">Name</label>
@@ -83,11 +83,6 @@
                                         <td>
                                             <button class="btn btn-dark btn-sm save-btn" style="display:none;">Save</button>
                                             <button class="btn btn-secondary btn-sm edit-btn">Edit</button>
-                                            <form action="inventory" method="post" class="d-inline">
-                                                <input type="hidden" name="action" value="deleteProduct">
-                                                <input type="hidden" name="code" value="${product.code}">
-                                                <button type="submit" class="btn btn-dark btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                                            </form>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -133,6 +128,33 @@
     </div>
     <script>
         $(document).ready(function() {
+            $('#addProductForm').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var formData = form.serialize();
+
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            form[0].reset();
+                            location.reload(); // Reload to show updated product list
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+
             $('.edit-btn').on('click', function() {
                 var row = $(this).closest('tr');
                 row.find('.editable-name, .editable-price').attr('contenteditable', 'true').addClass('bg-light');
