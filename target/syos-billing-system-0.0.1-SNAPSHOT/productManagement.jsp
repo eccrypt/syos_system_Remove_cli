@@ -83,11 +83,6 @@
                                         <td>
                                             <button class="btn btn-dark btn-sm save-btn" style="display:none;">Save</button>
                                             <button class="btn btn-secondary btn-sm edit-btn">Edit</button>
-                                            <form action="inventory" method="post" class="d-inline">
-                                                <input type="hidden" name="action" value="deleteProduct">
-                                                <input type="hidden" name="code" value="${product.code}">
-                                                <button type="submit" class="btn btn-dark btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                                            </form>
                                         </td>
                                     </tr>
                                 </c:forEach>

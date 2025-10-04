@@ -7,7 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.syos.async.AsyncProcessorManager;
 import com.syos.async.AsyncResponse;
 
-@WebServlet(asyncSupported = true, urlPatterns = "/async-billing")
 public class AsyncBillingServlet extends HttpServlet {
     private final AsyncProcessorManager asyncManager = AsyncProcessorManager.getInstance();
 

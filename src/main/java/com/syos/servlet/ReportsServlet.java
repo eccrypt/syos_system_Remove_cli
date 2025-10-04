@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import com.syos.dto.BillReportDTO;
 import com.syos.dto.ProductStockReportItemDTO;
 import com.syos.service.WebReportService;
 
-@WebServlet("/reports")
 public class ReportsServlet extends HttpServlet {
     private final WebReportService reportService;
 
