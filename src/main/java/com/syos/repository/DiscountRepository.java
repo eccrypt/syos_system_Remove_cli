@@ -189,4 +189,48 @@ public class DiscountRepository {
 			throw new RuntimeException("Error unassigning discount " + discountId + " from product " + productCode, e);
 		}
 	}
+
+	public void updateDiscount(int discountId, String name, DiscountType type, double value, LocalDate startDate, LocalDate endDate) {
+		String sql = """
+				UPDATE discounts
+				SET name = ?, type = ?, value = ?, start_date = ?, end_date = ?
+				WHERE id = ?
+				""";
+		try (Connection connection = DatabaseManager.getInstance().getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, type.name());
+			preparedStatement.setDouble(3, value);
+			preparedStatement.setDate(4, Date.valueOf(startDate));
+			preparedStatement.setDate(5, Date.valueOf(endDate));
+			preparedStatement.setInt(6, discountId);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException("Error updating discount " + discountId, e);
+		}
+	}
+
+	public void deleteDiscount(int discountId) {
+		// First delete links
+		String deleteLinksSql = """
+				DELETE FROM product_discounts
+				WHERE discount_id = ?
+				""";
+		String deleteDiscountSql = """
+				DELETE FROM discounts
+				WHERE id = ?
+				""";
+		try (Connection connection = DatabaseManager.getInstance().getConnection()) {
+			try (PreparedStatement preparedStatement = connection.prepareStatement(deleteLinksSql)) {
+				preparedStatement.setInt(1, discountId);
+				preparedStatement.executeUpdate();
+			}
+			try (PreparedStatement preparedStatement = connection.prepareStatement(deleteDiscountSql)) {
+				preparedStatement.setInt(1, discountId);
+				preparedStatement.executeUpdate();
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Error deleting discount " + discountId, e);
+		}
+	}
 }

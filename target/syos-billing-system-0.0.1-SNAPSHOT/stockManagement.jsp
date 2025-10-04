@@ -14,6 +14,7 @@
     <title>Stock Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-white">
     <div class="container py-5">
@@ -138,5 +139,39 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var action = form.find('input[name="action"]').val();
+                if (action === 'discardBatch') {
+                    if (!confirm('Discard this batch?')) {
+                        return;
+                    }
+                }
+                var formData = form.serialize();
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

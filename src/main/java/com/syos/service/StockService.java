@@ -37,6 +37,10 @@ public class StockService {
         inventoryManager.discardBatchQuantity(batchId, quantity);
     }
 
+    public void discardBatch(int batchId) {
+        inventoryManager.removeEntireBatch(batchId);
+    }
+
     public List<String> getAllProductCodesWithExpiringBatches(int days) {
         return inventoryManager.getAllProductCodesWithExpiringBatches(days);
     }

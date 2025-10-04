@@ -14,6 +14,7 @@
     <title>Product Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-white">
     <div class="container py-5">
@@ -71,12 +72,13 @@
                             </thead>
                             <tbody>
                                 <c:forEach var="product" items="${products}">
-                                    <tr>
+                                    <tr data-code="${product.code}">
                                         <td>${product.code}</td>
-                                        <td>${product.name}</td>
-                                        <td>${product.price}</td>
+                                        <td contenteditable="true" class="editable-name">${product.name}</td>
+                                        <td contenteditable="true" class="editable-price">${product.price}</td>
                                         <td>
-                                            <a href="?action=editProduct&code=${product.code}" class="btn btn-dark btn-sm">Edit</a>
+                                            <button class="btn btn-dark btn-sm save-btn" style="display:none;">Save</button>
+                                            <button class="btn btn-secondary btn-sm edit-btn">Edit</button>
                                             <form action="inventory" method="post" class="d-inline">
                                                 <input type="hidden" name="action" value="deleteProduct">
                                                 <input type="hidden" name="code" value="${product.code}">
@@ -123,5 +125,54 @@
             </div>
         </c:if>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.edit-btn').on('click', function() {
+                var row = $(this).closest('tr');
+                row.find('.editable-name, .editable-price').attr('contenteditable', 'true').addClass('bg-light');
+                row.find('.save-btn').show();
+                row.find('.edit-btn').hide();
+            });
+
+            $('.save-btn').on('click', function() {
+                var row = $(this).closest('tr');
+                var code = row.data('code');
+                var name = row.find('.editable-name').text().trim();
+                var price = parseFloat(row.find('.editable-price').text().trim());
+
+                if (isNaN(price)) {
+                    alert('Invalid price');
+                    return;
+                }
+
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: {
+                        action: 'updateProduct',
+                        code: code,
+                        newName: name,
+                        newPrice: price
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            row.find('.editable-name, .editable-price').attr('contenteditable', 'false').removeClass('bg-light');
+                            row.find('.save-btn').hide();
+                            row.find('.edit-btn').show();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

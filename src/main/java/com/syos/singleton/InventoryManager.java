@@ -12,6 +12,7 @@ import com.syos.repository.ShelfStockRepository;
 import com.syos.repository.StockBatchRepository;
 import com.syos.repository.ProductRepository;
 import com.syos.strategy.ShelfStrategy;
+import com.syos.strategy.ExpiryAwareFifoStrategy;
 
 public class InventoryManager {
 	private static InventoryManager instance;
@@ -30,6 +31,9 @@ public class InventoryManager {
 
 	public static synchronized InventoryManager getInstance(ShelfStrategy strat) {
 		if (instance == null) {
+			if (strat == null) {
+				strat = new ExpiryAwareFifoStrategy();
+			}
 			ProductRepository productRepo = new ProductRepository();
 			instance = new InventoryManager(strat, new StockBatchRepository(), new ShelfStockRepository(productRepo),
 					productRepo);

@@ -22,6 +22,7 @@
     <title>Discount Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-white">
     <div class="container py-5">
@@ -79,7 +80,7 @@
                         <h5>Assign/Unassign Discount</h5>
                     </div>
                     <div class="card-body">
-                        <form action="inventory" method="post" class="mb-3">
+                        <form id="assignForm" class="mb-3">
                             <input type="hidden" name="action" value="assignDiscount">
                             <div class="mb-3">
                                 <label class="form-label">Product Code</label>
@@ -91,7 +92,7 @@
                             </div>
                             <button type="submit" class="btn btn-dark">Assign Discount</button>
                         </form>
-                        <form action="inventory" method="post">
+                        <form id="unassignForm">
                             <input type="hidden" name="action" value="unassignDiscount">
                             <div class="mb-3">
                                 <label class="form-label">Product Code</label>
@@ -126,17 +127,28 @@
                                             <th>Value</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="discount" items="${discounts}">
-                                            <tr>
+                                            <tr data-id="${discount.id}">
                                                 <td>${discount.id}</td>
-                                                <td>${discount.name}</td>
-                                                <td>${discount.type == 'PERCENT' ? 'Percentage' : 'Fixed Amount'}</td>
-                                                <td><c:if test="${discount.type == 'PERCENT'}">${discount.value}%</c:if><c:if test="${discount.type != 'PERCENT'}">${discount.value}</c:if></td>
-                                                <td>${discount.start}</td>
-                                                <td>${discount.end}</td>
+                                                <td contenteditable="true" class="editable-name">${discount.name}</td>
+                                                <td>
+                                                    <select class="form-select editable-type">
+                                                        <option value="PERCENT" ${discount.type == 'PERCENT' ? 'selected' : ''}>Percentage</option>
+                                                        <option value="AMOUNT" ${discount.type == 'AMOUNT' ? 'selected' : ''}>Fixed Amount</option>
+                                                    </select>
+                                                </td>
+                                                <td contenteditable="true" class="editable-value">${discount.value}</td>
+                                                <td><input type="date" class="form-control editable-start" value="${discount.start}"></td>
+                                                <td><input type="date" class="form-control editable-end" value="${discount.end}"></td>
+                                                <td>
+                                                    <button class="btn btn-dark btn-sm save-btn" style="display:none;">Save</button>
+                                                    <button class="btn btn-dark btn-sm edit-btn">Edit</button>
+                                                    <button class="btn btn-dark btn-sm delete-btn">Delete</button>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -166,6 +178,7 @@
                                         <th>Discount Name</th>
                                         <th>Discount Type</th>
                                         <th>Discount Value</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -179,6 +192,9 @@
                                                 <td>${discount.name}</td>
                                                 <td>${discount.type}</td>
                                                 <td>${discount.value}</td>
+                                                <td>
+                                                    <button class="btn btn-dark btn-sm unassign-btn" data-product="${product.code}" data-discount="${discount.id}">Unassign</button>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </c:forEach>
@@ -193,5 +209,146 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#assignForm, #unassignForm').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var formData = form.serialize();
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+
+            $('.edit-btn').on('click', function() {
+                var row = $(this).closest('tr');
+                row.find('.editable-name, .editable-value').attr('contenteditable', 'true').addClass('bg-light');
+                row.find('.editable-start, .editable-end, .editable-type').prop('disabled', false);
+                row.find('.save-btn').show();
+                row.find('.edit-btn').hide();
+            });
+
+            $('.save-btn').on('click', function() {
+                var row = $(this).closest('tr');
+                var id = row.data('id');
+                var name = row.find('.editable-name').text().trim();
+                var type = row.find('.editable-type').val();
+                var value = parseFloat(row.find('.editable-value').text().trim());
+                var startDate = row.find('.editable-start').val();
+                var endDate = row.find('.editable-end').val();
+
+                if (isNaN(value)) {
+                    alert('Invalid value');
+                    return;
+                }
+
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: {
+                        action: 'updateDiscount',
+                        discountId: id,
+                        name: name,
+                        type: type,
+                        value: value,
+                        startDate: startDate,
+                        endDate: endDate
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            row.find('.editable-name, .editable-value').attr('contenteditable', 'false').removeClass('bg-light');
+                            row.find('.editable-start, .editable-end, .editable-type').prop('disabled', true);
+                            row.find('.save-btn').hide();
+                            row.find('.edit-btn').show();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+
+            $('.delete-btn').on('click', function() {
+                if (!confirm('Are you sure you want to delete this discount?')) {
+                    return;
+                }
+                var row = $(this).closest('tr');
+                var id = row.data('id');
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: {
+                        action: 'deleteDiscount',
+                        discountId: id
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+
+            $('.unassign-btn').on('click', function() {
+                var btn = $(this);
+                var productCode = btn.data('product');
+                var discountId = btn.data('discount');
+                $.ajax({
+                    url: 'inventory',
+                    type: 'POST',
+                    data: {
+                        action: 'unassignDiscount',
+                        productCode: productCode,
+                        discountId: discountId
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -39,7 +39,23 @@ public class ProductService {
 	        }
 
 	        existingProduct.setName(newName);
-	        productRepository.update(existingProduct); 
+	        productRepository.update(existingProduct);
+	        return existingProduct;
+	    }
+
+	    public Product updateProduct(String code, String newName, double newPrice) {
+	        if (newName.length() > CommonVariables.MAX_PRODUCT_NAME_LENGTH) {
+	            throw new IllegalArgumentException("Product name must be at most 100 characters");
+	        }
+
+	        Product existingProduct = productRepository.findByCode(code);
+	        if (existingProduct == null) {
+	            throw new IllegalArgumentException("Product with code " + code + " not found.");
+	        }
+
+	        existingProduct.setName(newName);
+	        existingProduct.setPrice(newPrice);
+	        productRepository.update(existingProduct);
 	        return existingProduct;
 	    }
 

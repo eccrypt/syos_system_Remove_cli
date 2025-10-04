@@ -41,4 +41,12 @@ public class DiscountService {
     public List<Product> getProductsWithActiveDiscounts(LocalDate date) {
         return productRepository.findProductsWithActiveDiscounts(date);
     }
+
+    public void updateDiscount(int discountId, String name, DiscountType type, double value, LocalDate startDate, LocalDate endDate) {
+        discountRepository.updateDiscount(discountId, name, type, value, startDate, endDate);
+    }
+
+    public void deleteDiscount(int discountId) {
+        discountRepository.deleteDiscount(discountId);
+    }
 }
