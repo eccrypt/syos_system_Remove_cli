@@ -12,3 +12,7 @@
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:23:23 +0530] "POST /inventory HTTP/1.1" 200 61 http-bio-8080-exec-10 246
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:23:27 +0530] "GET /productManagement.jsp HTTP/1.1" 200 22106 http-bio-8080-exec-10 101
 0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:24:11 +0530] "POST /inventory HTTP/1.1" 200 7948 http-bio-8080-exec-10 266
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:24:23 +0530] "GET /productManagement.jsp HTTP/1.1" 200 23379 http-bio-8080-exec-10 120
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:24:26 +0530] "GET /index.jsp HTTP/1.1" 200 9803 http-bio-8080-exec-10 1468
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:24:28 +0530] "GET /inventory HTTP/1.1" 200 7842 http-bio-8080-exec-10 50
+0:0:0:0:0:0:0:1 - - [04/Oct/2025:20:24:32 +0530] "GET /productManagement.jsp HTTP/1.1" 200 23379 http-bio-8080-exec-7 206
