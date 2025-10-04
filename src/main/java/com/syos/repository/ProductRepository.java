@@ -85,4 +85,30 @@ public class ProductRepository {
 		// TODO Auto-generated method stub
 
 	}
+
+	// Load products that have active discounts
+	public List<Product> findProductsWithActiveDiscounts(java.time.LocalDate date) {
+		String sql = """
+				SELECT DISTINCT p.code, p.name, p.price
+				FROM product p
+				JOIN product_discounts pd ON p.code = pd.product_code
+				JOIN discounts d ON pd.discount_id = d.id
+				WHERE d.start_date <= ? AND d.end_date >= ?
+				ORDER BY p.name ASC
+				""";
+		List<Product> products = new ArrayList<>();
+		try (Connection connection = DatabaseManager.getInstance().getConnection();
+				java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			preparedStatement.setDate(1, java.sql.Date.valueOf(date));
+			preparedStatement.setDate(2, java.sql.Date.valueOf(date));
+			java.sql.ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				products.add(new Product(resultSet.getString("code"), resultSet.getString("name"),
+						resultSet.getDouble("price")));
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error loading products with active discounts", e);
+		}
+		return products;
+	}
 }

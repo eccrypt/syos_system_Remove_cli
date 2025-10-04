@@ -29,6 +29,7 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\observer\StockObserver.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\ProductService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\StoreBillingService.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\StockService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\repository\ReportRepository.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\ViewExpiryStockCommand.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\MoveToShelfCommand.java
@@ -73,6 +74,7 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\factory\BillItemFactory.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\async\RequestProcessor.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\command\RemoveCloseToExpiryStockCommand.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\DiscountService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\servlet\LogoutServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Discount.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\BillItem.java

@@ -1,20 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.syos.service.DiscountService" %>
 <%@ page import="com.syos.repository.DiscountRepository" %>
-<%@ page import="com.syos.repository.ProductRepository" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.syos.model.Discount" %>
 <%@ page import="com.syos.model.Product" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    DiscountRepository discountRepository = new DiscountRepository();
-    ProductRepository productRepository = new ProductRepository();
-    List<Discount> discounts = discountRepository.findAll();
-    List<Product> products = productRepository.findAll();
+    DiscountService discountService = new DiscountService();
+    List<Discount> discounts = discountService.getAllDiscounts();
     LocalDate today = LocalDate.now();
+    List<Product> products = discountService.getProductsWithActiveDiscounts(today);
     request.setAttribute("discounts", discounts);
     request.setAttribute("products", products);
-    request.setAttribute("discountRepository", discountRepository);
+    request.setAttribute("discountRepository", new DiscountRepository()); // for compatibility
     request.setAttribute("today", today);
 %>
 <!DOCTYPE html>
@@ -157,7 +156,6 @@
                         <h5>Products with Discounts</h5>
                     </div>
                     <div class="card-body">
-                        <c:set var="hasDiscounts" value="false" />
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -173,24 +171,21 @@
                                 <tbody>
                                     <c:forEach var="product" items="${products}">
                                         <c:set var="discounts" value="${discountRepository.findDiscountsByProductCode(product.code, today)}" />
-                                        <c:if test="${not empty discounts}">
-                                            <c:set var="hasDiscounts" value="true" />
-                                            <c:forEach var="discount" items="${discounts}">
-                                                <tr>
-                                                    <td>${product.code}</td>
-                                                    <td>${product.name}</td>
-                                                    <td>${discount.id}</td>
-                                                    <td>${discount.name}</td>
-                                                    <td>${discount.type}</td>
-                                                    <td>${discount.value}</td>
-                                                </tr>
-                                            </c:forEach>
-                                        </c:if>
+                                        <c:forEach var="discount" items="${discounts}">
+                                            <tr>
+                                                <td>${product.code}</td>
+                                                <td>${product.name}</td>
+                                                <td>${discount.id}</td>
+                                                <td>${discount.name}</td>
+                                                <td>${discount.type}</td>
+                                                <td>${discount.value}</td>
+                                            </tr>
+                                        </c:forEach>
                                     </c:forEach>
                                 </tbody>
                             </table>
                         </div>
-                        <c:if test="${not hasDiscounts}">
+                        <c:if test="${empty products}">
                             <p class="text-muted">No products with active discounts found.</p>
                         </c:if>
                     </div>

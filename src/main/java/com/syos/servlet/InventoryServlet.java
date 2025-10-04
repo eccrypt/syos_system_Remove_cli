@@ -43,6 +43,8 @@ import com.syos.util.CommonVariables;
 import com.syos.service.ProductService;
 import com.syos.service.StockAlertService;
 import com.syos.service.DiscountCreationService;
+import com.syos.service.StockService;
+import com.syos.service.DiscountService;
 
 import com.syos.model.StockBatch;
 import com.syos.model.Discount;
@@ -171,8 +173,8 @@ public class InventoryServlet extends HttpServlet {
 
     private void handleViewProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductRepository productRepository = new ProductRepository();
-        var products = productRepository.findAll();
+        ProductService productService = new ProductService();
+        var products = productService.getAllProducts();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/viewProducts.jsp").forward(request, response);
     }
@@ -201,7 +203,8 @@ public class InventoryServlet extends HttpServlet {
             int quantity = Integer.parseInt(quantityStr);
             LocalDate purchaseDate = LocalDate.parse(purchaseDateStr);
             LocalDate expiryDate = LocalDate.parse(expiryDateStr);
-            inventoryManager.receiveStock(productCode, purchaseDate, expiryDate, quantity);
+            StockService stockService = new StockService();
+            stockService.receiveStock(productCode, purchaseDate, expiryDate, quantity);
             request.setAttribute("message", "Stock received successfully.");
         } catch (Exception e) {
             request.setAttribute("error", "Error receiving stock: " + e.getMessage());
@@ -215,7 +218,8 @@ public class InventoryServlet extends HttpServlet {
         String quantityStr = request.getParameter("quantity");
         try {
             int quantity = Integer.parseInt(quantityStr);
-            inventoryManager.moveToShelf(code, quantity);
+            StockService stockService = new StockService();
+            stockService.moveToShelf(code, quantity);
             request.setAttribute("message", "Stock moved to shelf successfully.");
         } catch (Exception e) {
             request.setAttribute("error", "Error moving to shelf: " + e.getMessage());
@@ -226,33 +230,33 @@ public class InventoryServlet extends HttpServlet {
     private void handleViewStock(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String productCode = request.getParameter("productCode");
+        StockService stockService = new StockService();
         List<String> productCodes;
         if (productCode != null && !productCode.isEmpty()) {
             productCodes = List.of(productCode);
         } else {
-            productCodes = inventoryManager.getAllProductCodes();
+            productCodes = stockService.getAllProductCodes();
         }
         request.setAttribute("productCodes", productCodes);
-        request.setAttribute("inventoryManager", inventoryManager);
+        request.setAttribute("inventoryManager", stockService); // Note: keeping for compatibility, but ideally use service methods
         request.getRequestDispatcher("/viewStock.jsp").forward(request, response);
     }
 
     private void handleViewAllInventoryStocks(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<String> productCodes = inventoryManager.getAllProductCodes();
+        StockService stockService = new StockService();
+        List<String> productCodes = stockService.getAllProductCodes();
         request.setAttribute("productCodes", productCodes);
-        request.setAttribute("inventoryManager", inventoryManager);
+        request.setAttribute("inventoryManager", stockService); // compatibility
         request.getRequestDispatcher("/viewAllInventoryStocks.jsp").forward(request, response);
     }
 
     private void handleViewExpiryStock(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Assuming view expiry stock shows expiring batches or something
-        // Need to see what ViewExpiryStockCommand does
-        // From code, it seems to show stock with expiry info
-        List<String> productCodes = inventoryManager.getAllProductCodes();
+        StockService stockService = new StockService();
+        List<String> productCodes = stockService.getAllProductCodes();
         request.setAttribute("productCodes", productCodes);
-        request.setAttribute("inventoryManager", inventoryManager);
+        request.setAttribute("inventoryManager", stockService);
         request.getRequestDispatcher("/viewExpiryStock.jsp").forward(request, response);
     }
 
@@ -289,7 +293,8 @@ public class InventoryServlet extends HttpServlet {
             throws ServletException, IOException {
         String daysStr = request.getParameter("days");
         int days = Integer.parseInt(daysStr);
-        List<StockBatch> batches = inventoryManager.getAllExpiringBatches(days);
+        StockService stockService = new StockService();
+        List<StockBatch> batches = stockService.getAllExpiringBatches(days);
         request.setAttribute("batches", batches);
         request.setAttribute("days", days);
         request.getRequestDispatcher("/viewExpiringBatches.jsp").forward(request, response);
@@ -329,7 +334,8 @@ public class InventoryServlet extends HttpServlet {
                 quantity = selectedBatch.getQuantityRemaining();
             }
             try {
-                inventoryManager.discardBatchQuantity(batchId, quantity);
+                StockService stockService = new StockService();
+                stockService.discardBatchQuantity(batchId, quantity);
                 request.setAttribute("message", "Batch discarded successfully.");
             } catch (Exception e) {
                 request.setAttribute("error", "Error discarding batch: " + e.getMessage());
@@ -379,21 +385,18 @@ public class InventoryServlet extends HttpServlet {
 
     private void handleViewAllDiscounts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DiscountRepository discountRepository = new DiscountRepository();
-        List<Discount> discounts = discountRepository.findAll();
+        DiscountService discountService = new DiscountService();
+        List<Discount> discounts = discountService.getAllDiscounts();
         request.setAttribute("discounts", discounts);
         request.getRequestDispatcher("/viewAllDiscounts.jsp").forward(request, response);
     }
 
     private void handleViewAllProductsWithDiscounts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DiscountRepository discountRepository = new DiscountRepository();
-        ProductRepository productRepository = new ProductRepository();
-        // Need to get products with discounts, perhaps from repository
-        // Assuming discountRepository has a method or we can get from products
-        List<Product> products = productRepository.findAll();
+        DiscountService discountService = new DiscountService();
+        List<Product> products = discountService.getProductsWithActiveDiscounts(LocalDate.now());
         request.setAttribute("products", products);
-        request.setAttribute("discountRepository", discountRepository);
+        request.setAttribute("discountRepository", new DiscountRepository()); // for compatibility
         request.setAttribute("today", LocalDate.now());
         request.getRequestDispatcher("/viewAllProductsWithDiscounts.jsp").forward(request, response);
     }

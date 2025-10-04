@@ -1,5 +1,8 @@
 package com.syos.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.syos.model.Product;
 import com.syos.repository.ProductRepository;
 import com.syos.util.CommonVariables;
@@ -43,5 +46,13 @@ public class ProductService {
 
 	    public Product findProductByCode(String code) {
 	        return productRepository.findByCode(code);
+	    }
+
+	    public List<Product> getAllProducts() {
+	        return productRepository.findAll();
+	    }
+
+	    public List<Product> getProductsWithActiveDiscounts(LocalDate date) {
+	        return productRepository.findProductsWithActiveDiscounts(date);
 	    }
 }

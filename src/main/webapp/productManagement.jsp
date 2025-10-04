@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.syos.repository.ProductRepository" %>
+<%@ page import="com.syos.service.ProductService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.syos.model.Product" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    ProductRepository productRepository = new ProductRepository();
-    List<Product> products = productRepository.findAll();
+    ProductService productService = new ProductService();
+    List<Product> products = productService.getAllProducts();
     request.setAttribute("products", products);
 %>
 <!DOCTYPE html>
