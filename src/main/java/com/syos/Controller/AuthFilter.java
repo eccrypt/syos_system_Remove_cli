@@ -1,4 +1,4 @@
-package com.syos.servlet;
+package com.syos.Controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
