@@ -72,17 +72,16 @@ private AsyncProcessorManager() {
 ```
 
 **RequestQueue Implementation**:
-```java
-// RequestQueue.java - Lines 7-14
+
 public class RequestQueue {
     private final BlockingQueue<AsyncRequest> queue;
     private final int capacity;
 
     public RequestQueue(int capacity) {
         this.capacity = capacity;
-        this.queue = new LinkedBlockingQueue<>(capacity);  // LinkedBlockingQueue implementation
+        this.queue = new LinkedBlockingQueue<>(capacity);  
     }
-```
+
 
 **Producer Operations (Adding Requests)**:
 ```java
