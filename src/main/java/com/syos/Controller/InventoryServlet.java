@@ -64,6 +64,9 @@ public class InventoryServlet extends HttpServlet {
             case "moveToShelf":
                 handleMoveToShelf(request, response);
                 break;
+            case "moveToOnline":
+                handleMoveToOnline(request, response);
+                break;
             case "viewStock":
                 handleViewStock(request, response);
                 break;
@@ -190,6 +193,23 @@ public class InventoryServlet extends HttpServlet {
             message = "Stock moved to shelf successfully.";
         } catch (Exception e) {
             error = "Error moving to shelf: " + e.getMessage();
+        }
+        handleResponse(request, response, message, error, "/productManagement.jsp");
+    }
+
+    private void handleMoveToOnline(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String code = request.getParameter("code");
+        String quantityStr = request.getParameter("quantity");
+        String message = null;
+        String error = null;
+        try {
+            int quantity = Integer.parseInt(quantityStr);
+            StockService stockService = new StockService();
+            stockService.moveToOnline(code, quantity);
+            message = "Stock moved to online successfully.";
+        } catch (Exception e) {
+            error = "Error moving to online: " + e.getMessage();
         }
         handleResponse(request, response, message, error, "/productManagement.jsp");
     }

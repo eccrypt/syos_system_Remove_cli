@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import com.syos.model.StockBatch;
 import com.syos.model.ShelfStock;
+import com.syos.model.OnlineStock;
 import com.syos.observer.StockObserver;
 import com.syos.repository.ShelfStockRepository;
+import com.syos.repository.OnlineStockRepository;
 import com.syos.repository.StockBatchRepository;
 import com.syos.repository.ProductRepository;
 import com.syos.strategy.ShelfStrategy;
@@ -19,14 +21,16 @@ public class InventoryManager {
 
 	private final StockBatchRepository batchRepository;
 	private final ShelfStockRepository shelfRepository;
+	private final OnlineStockRepository onlineRepository;
 	private final ShelfStrategy strategy;
 	private final List<StockObserver> observers = new ArrayList<>();
 
 	public InventoryManager(ShelfStrategy strategy, StockBatchRepository batchRepository,
-			ShelfStockRepository shelfRepository, ProductRepository productRepository) {
+			ShelfStockRepository shelfRepository, OnlineStockRepository onlineRepository, ProductRepository productRepository) {
 		this.strategy = strategy;
 		this.batchRepository = batchRepository;
 		this.shelfRepository = shelfRepository;
+		this.onlineRepository = onlineRepository;
 	}
 
 	public static synchronized InventoryManager getInstance(ShelfStrategy strat) {
@@ -36,7 +40,7 @@ public class InventoryManager {
 			}
 			ProductRepository productRepo = new ProductRepository();
 			instance = new InventoryManager(strat, new StockBatchRepository(), new ShelfStockRepository(productRepo),
-					productRepo);
+					new OnlineStockRepository(productRepo), productRepo);
 		}
 		return instance;
 	}
@@ -122,6 +126,57 @@ public class InventoryManager {
 			}
 		}
 		System.out.printf("Successfully moved %d units of %s to shelf.%n", qtyToMove, productCode);
+	}
+
+	public void moveToOnline(String productCode, int qtyToMove) {
+		if (productCode == null || productCode.trim().isEmpty()) {
+			throw new IllegalArgumentException("Product code cannot be empty.");
+		}
+		if (qtyToMove <= 0) {
+			throw new IllegalArgumentException("Quantity to move must be positive.");
+		}
+
+		int remainingToMove = qtyToMove;
+
+		List<StockBatch> backStoreBatches = batchRepository.findByProduct(productCode);
+
+		if (backStoreBatches == null || backStoreBatches.isEmpty()) {
+			throw new IllegalArgumentException("No stock batches found in back-store for product: " + productCode);
+		}
+
+		int totalAvailableInBackStore = backStoreBatches.stream().mapToInt(StockBatch::getQuantityRemaining).sum();
+		if (totalAvailableInBackStore < qtyToMove) {
+			throw new IllegalArgumentException(
+					String.format("Insufficient stock in back-store for %s. Available: %d, Requested: %d.", productCode,
+							totalAvailableInBackStore, qtyToMove));
+		}
+
+		while (remainingToMove > 0 && !backStoreBatches.isEmpty()) {
+			StockBatch chosenBackStoreBatch = strategy.selectBatchFromBackStore(backStoreBatches);
+
+			if (chosenBackStoreBatch == null) {
+				throw new IllegalStateException(
+						"Strategy returned null batch unexpectedly during move from back-store.");
+			}
+
+			int availableInBackStoreBatch = chosenBackStoreBatch.getQuantityRemaining();
+			int usedFromBackStoreBatch = Math.min(availableInBackStoreBatch, remainingToMove);
+
+			chosenBackStoreBatch.setQuantityRemaining(availableInBackStoreBatch - usedFromBackStoreBatch);
+			batchRepository.updateQuantity(chosenBackStoreBatch.getId(), chosenBackStoreBatch.getQuantityRemaining());
+
+			onlineRepository.upsertBatchQuantityOnline(productCode, chosenBackStoreBatch.getId(),
+					usedFromBackStoreBatch, chosenBackStoreBatch.getExpiryDate());
+			System.out.printf("Moved %d units from back-store batch %d to online for %s.%n", usedFromBackStoreBatch,
+					chosenBackStoreBatch.getId(), productCode);
+
+			remainingToMove -= usedFromBackStoreBatch;
+
+			if (chosenBackStoreBatch.getQuantityRemaining() == 0) {
+				backStoreBatches.remove(chosenBackStoreBatch);
+			}
+		}
+		System.out.printf("Successfully moved %d units of %s to online.%n", qtyToMove, productCode);
 	}
 
 	public void deductFromShelf(String productCode, int quantity) {
@@ -229,6 +284,13 @@ public class InventoryManager {
 		return shelfRepository.getQuantity(productCode);
 	}
 
+	public int getQuantityOnline(String productCode) {
+		if (productCode == null || productCode.trim().isEmpty()) {
+			throw new IllegalArgumentException("Product code cannot be empty.");
+		}
+		return onlineRepository.getQuantity(productCode);
+	}
+
 	public List<ShelfStock> getBatchesOnShelfForProduct(String productCode) {
 		return shelfRepository.getBatchesOnShelf(productCode);
 	}
@@ -240,8 +302,13 @@ public class InventoryManager {
 	public List<String> getAllProductCodes() {
 		List<String> codes = new ArrayList<>();
 		codes.addAll(shelfRepository.getAllProductCodes());
+		codes.addAll(onlineRepository.getAllProductCodes());
 		codes.addAll(batchRepository.getAllProductCodesWithBatches());
 		return codes.stream().distinct().collect(Collectors.toList());
+	}
+
+	public OnlineStockRepository getOnlineRepository() {
+		return onlineRepository;
 	}
 
 	public List<String> getAllProductCodesWithExpiringBatches(int daysThreshold) {

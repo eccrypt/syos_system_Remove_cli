@@ -123,7 +123,13 @@
                                                         <input type="hidden" name="action" value="moveToShelf">
                                                         <input type="hidden" name="code" value="${productCode}">
                                                         <input type="number" name="quantity" min="1" max="${batch.quantityRemaining}" placeholder="Qty" class="form-control form-control-sm d-inline-block" style="width: 80px;" required>
-                                                        <button type="submit" class="btn btn-dark btn-sm">Move</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm">Shelf</button>
+                                                    </form>
+                                                    <form action="inventory" method="post" class="d-inline">
+                                                        <input type="hidden" name="action" value="moveToOnline">
+                                                        <input type="hidden" name="code" value="${productCode}">
+                                                        <input type="number" name="quantity" min="1" max="${batch.quantityRemaining}" placeholder="Qty" class="form-control form-control-sm d-inline-block" style="width: 80px;" required>
+                                                        <button type="submit" class="btn btn-primary btn-sm">Online</button>
                                                     </form>
                                                     <form action="inventory" method="post" class="d-inline">
                                                         <input type="hidden" name="action" value="discardBatch">

@@ -78,10 +78,20 @@ public class AuthFilter implements Filter {
         }
         if (userRole == UserType.STAFF) {
             return path.startsWith("/billing") ||
-                   path.startsWith("/inventory") ||
-                   path.equals("/") ||
-                   path.equals("/index.jsp") ||
-                   path.startsWith("/logout");
+                    path.startsWith("/inventory") ||
+                    path.equals("/") ||
+                    path.equals("/index.jsp") ||
+                    path.startsWith("/logout");
+        }
+        if (userRole == UserType.CUSTOMER) {
+            return path.startsWith("/customer") ||
+                    path.equals("/customerProducts.jsp") ||
+                    path.equals("/cart.jsp") ||
+                    path.equals("/checkout.jsp") ||
+                    path.equals("/customerBillReceipt.jsp") ||
+                    path.startsWith("/addToCart") ||
+                    path.startsWith("/updateCart") ||
+                    path.startsWith("/logout");
         }
 
         return false;

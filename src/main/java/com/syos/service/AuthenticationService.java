@@ -2,8 +2,10 @@ package com.syos.service;
 
 import java.sql.SQLException;
 
+import com.syos.enums.UserType;
 import com.syos.model.User;
 import com.syos.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -14,8 +16,18 @@ public class AuthenticationService {
 
     public User authenticate(String email, String password) throws SQLException {
         User user = userRepository.findByEmail(email);
-        if (user != null && password.equals(user.getPassword())) {
-            return user;
+        if (user != null) {
+            boolean passwordMatches;
+            if (user.getRole() == UserType.CUSTOMER) {
+                // Customers have hashed passwords
+                passwordMatches = BCrypt.checkpw(password, user.getPassword());
+            } else {
+                // Admin and Staff have plain passwords (assuming for now)
+                passwordMatches = password.equals(user.getPassword());
+            }
+            if (passwordMatches) {
+                return user;
+            }
         }
         return null;
     }

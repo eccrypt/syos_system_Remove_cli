@@ -39,6 +39,10 @@
                             <p>Admin: test@gmail.com / admin123</p>
                             <p>Staff: staff@syos.com / staff123</p>
                         </div>
+
+                        <div class="text-center mt-3">
+                            <p>Customer? <a href="customerLogin.jsp">Login here</a> or <a href="customerRegister">Register</a></p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import com.syos.model.StockBatch;
 import com.syos.observer.StockObserver;
 import com.syos.repository.ProductRepository;
 import com.syos.repository.ShelfStockRepository;
+import com.syos.repository.OnlineStockRepository;
 import com.syos.repository.StockBatchRepository;
 import com.syos.singleton.InventoryManager;
 import com.syos.strategy.ShelfStrategy;
@@ -36,6 +37,7 @@ class InventoryManagerTest {
     // Dependencies that InventoryManager uses
     @Mock private StockBatchRepository mockBatchRepository;
     @Mock private ShelfStockRepository mockShelfRepository;
+    @Mock private OnlineStockRepository mockOnlineRepository;
     @Mock private ProductRepository mockProductRepository; // Used indirectly by ShelfStockRepository and in getInstance
     @Mock private ShelfStrategy mockStrategy;
     @Mock private StockObserver mockStockObserver; // For testing observer pattern
@@ -70,7 +72,7 @@ class InventoryManagerTest {
                     mockedShelfStockRepoConstruction = mockConstruction(ShelfStockRepository.class, (mock, context) -> mockShelfRepository = mock);
 
                     // Call the real constructor, but with our specific mocks
-                    return new InventoryManager(mockStrategy, mockBatchRepository, mockShelfRepository, mockProductRepository);
+                    return new InventoryManager(mockStrategy, mockBatchRepository, mockShelfRepository, mockOnlineRepository, mockProductRepository);
                 });
     }
 

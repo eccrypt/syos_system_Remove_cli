@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import com.syos.db.DatabaseManager;
 import com.syos.enums.UserType;
 import com.syos.model.Admin;
+import com.syos.model.Customer;
 import com.syos.model.Staff;
 import com.syos.model.User;
 
@@ -64,6 +65,12 @@ public class UserRepository {
                 return new Admin(email, password, name);
             case STAFF:
                 return new Staff(email, password, name);
+            case CUSTOMER:
+                // For customers, name is firstName + " " + lastName
+                String[] nameParts = name.split(" ", 2);
+                String firstName = nameParts[0];
+                String lastName = nameParts.length > 1 ? nameParts[1] : "";
+                return new Customer(firstName, lastName, email, password, role);
             default:
                 throw new IllegalArgumentException("Unsupported user role: " + role);
         }

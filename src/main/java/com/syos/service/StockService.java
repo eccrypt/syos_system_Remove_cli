@@ -2,6 +2,7 @@ package com.syos.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.syos.model.StockBatch;
 import com.syos.singleton.InventoryManager;
@@ -21,8 +22,22 @@ public class StockService {
         inventoryManager.moveToShelf(productCode, quantity);
     }
 
+    public void moveToOnline(String productCode, int quantity) {
+        inventoryManager.moveToOnline(productCode, quantity);
+    }
+
     public int getQuantityOnShelf(String productCode) {
         return inventoryManager.getQuantityOnShelf(productCode);
+    }
+
+    public int getQuantityOnline(String productCode) {
+        return inventoryManager.getQuantityOnline(productCode);
+    }
+
+    public List<String> getProductCodesWithOnlineStock() {
+        return inventoryManager.getOnlineRepository().getAllProductCodes().stream()
+                .filter(code -> getQuantityOnline(code) > 0)
+                .collect(Collectors.toList());
     }
 
     public List<String> getAllProductCodes() {

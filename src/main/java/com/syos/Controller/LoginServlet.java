@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.syos.enums.UserType;
 import com.syos.model.User;
 import com.syos.service.AuthenticationService;
 
@@ -46,7 +47,12 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("userRole", user.getRole().toString());
                 session.setAttribute("userName", getUserName(user));
 
-                response.sendRedirect("index.jsp");
+                // Redirect based on user role
+                if (user.getRole() == UserType.CUSTOMER) {
+                    response.sendRedirect("customerProducts.jsp");
+                } else {
+                    response.sendRedirect("index.jsp");
+                }
             } else {
                 request.setAttribute("error", "Invalid email or password");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
