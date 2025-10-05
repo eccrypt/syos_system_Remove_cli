@@ -24,6 +24,6 @@ public class AddToCartServlet extends HttpServlet {
             cart.put(productCode, cart.getOrDefault(productCode, 0) + 1);
         }
 
-        response.sendRedirect("customerDashboard.jsp");
+        response.sendRedirect("customerProducts.jsp");
     }
 }
