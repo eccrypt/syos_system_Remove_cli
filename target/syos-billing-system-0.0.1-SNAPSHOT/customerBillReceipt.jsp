@@ -1,5 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.syos.repository.BillingRepository" %>
+<%@ page import="com.syos.model.Bill" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    String billIdParam = request.getParameter("billId");
+    if (billIdParam != null) {
+        try {
+            int billId = Integer.parseInt(billIdParam);
+            BillingRepository billingRepo = new BillingRepository();
+            Bill bill = billingRepo.findById(billId);
+            if (bill != null) {
+                request.setAttribute("bill", bill);
+            }
+        } catch (Exception e) {
+            // Handle error
+        }
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,7 +91,6 @@
         <div class="text-center mt-4">
             <p class="text-success">Thank you for shopping with SYOS Online Store!</p>
             <a href="customerProducts.jsp" class="btn btn-primary me-2">Continue Shopping</a>
-            <a href="logout" class="btn btn-light">Logout</a>
         </div>
 
     </div>

@@ -64,10 +64,13 @@ public class AuthFilter implements Filter {
             System.err.println("Database error during auth validation: " + e.getMessage());
         }
         UserType userRole = UserType.valueOf((String) session.getAttribute("userRole"));
+        System.out.println("AuthFilter: User role = " + userRole + ", Path = " + path);
         if (!hasAccess(userRole, path)) {
+            System.out.println("AuthFilter: Access denied for path: " + path);
             httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. Insufficient privileges.");
             return;
         }
+        System.out.println("AuthFilter: Access granted for path: " + path);
 
         chain.doFilter(request, response);
     }
@@ -91,6 +94,7 @@ public class AuthFilter implements Filter {
                     path.equals("/customerBillReceipt.jsp") ||
                     path.startsWith("/addToCart") ||
                     path.startsWith("/updateCart") ||
+                    path.startsWith("/async-customer-checkout") ||
                     path.startsWith("/logout");
         }
 

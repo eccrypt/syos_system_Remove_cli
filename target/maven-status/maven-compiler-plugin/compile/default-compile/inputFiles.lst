@@ -26,6 +26,7 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\StockService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\repository\ReportRepository.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\Controller\UpdateCartServlet.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\Controller\AsyncCustomerCheckoutServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\DiscountPricingStrategy.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\async\RequestQueue.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\ReportService.java
@@ -66,4 +67,5 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\Controller\LogoutServlet.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\ShelfStrategy.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\ShelfStock.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\async\processor\CustomerCheckoutRequestProcessor.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\db\DatabaseManager.java

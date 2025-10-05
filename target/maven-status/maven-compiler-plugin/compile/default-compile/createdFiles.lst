@@ -40,6 +40,7 @@ com\syos\strategy\ShelfStrategy.class
 com\syos\factory\UserFactory.class
 com\syos\enums\UserType.class
 com\syos\async\RequestProcessor.class
+com\syos\async\processor\CustomerCheckoutRequestProcessor.class
 com\syos\util\StockBatchIterator.class
 com\syos\repository\ReportRepository.class
 com\syos\observer\StockObserver.class
@@ -54,6 +55,7 @@ com\syos\service\AuthenticationService.class
 com\syos\async\WorkerPool.class
 com\syos\model\Admin.class
 com\syos\service\StockAlertService.class
+com\syos\Controller\AsyncCustomerCheckoutServlet.class
 com\syos\singleton\InventoryManager.class
 com\syos\repository\ShelfStockRepository.class
 com\syos\service\StoreBillingService.class

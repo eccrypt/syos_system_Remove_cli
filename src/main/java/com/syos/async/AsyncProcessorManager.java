@@ -16,7 +16,8 @@ public class AsyncProcessorManager {
         int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
         this.requestQueue = new RequestQueue(queueCapacity);
         List<RequestProcessor> processors = List.of(
-            new com.syos.async.processor.BillingRequestProcessor()
+            new com.syos.async.processor.BillingRequestProcessor(),
+            new com.syos.async.processor.CustomerCheckoutRequestProcessor()
         );
         this.workerPool = new WorkerPool(poolSize, requestQueue, processors);
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));

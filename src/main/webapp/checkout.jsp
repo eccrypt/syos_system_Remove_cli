@@ -68,9 +68,58 @@
                             <h4>Total: Rs. <%= total %></h4>
                         </div>
 
-                        <form action="checkout" method="post" class="mt-4">
-                            <button type="submit" class="btn btn-success btn-lg w-100">Confirm Payment</button>
-                        </form>
+                        <div class="mt-4">
+                            <button id="confirmPaymentBtn" class="btn btn-success btn-lg w-100" onclick="processCheckout()">
+                                <span id="btnText">Confirm Payment</span>
+                                <div id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <script>
+                        function processCheckout() {
+                            const btn = document.getElementById('confirmPaymentBtn');
+                            const btnText = document.getElementById('btnText');
+                            const spinner = document.getElementById('loadingSpinner');
+
+                            // Disable button and show loading
+                            btn.disabled = true;
+                            btnText.textContent = 'Processing...';
+                            spinner.classList.remove('d-none');
+
+                            // Submit async request
+                            fetch('async-customer-checkout', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'action=processCheckout'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    // Redirect to receipt page
+                                    window.location.href = 'customerBillReceipt.jsp?billId=' + data.data.billId;
+                                } else {
+                                    // Show error
+                                    alert('Checkout failed: ' + (data.message || 'Unknown error'));
+                                    // Re-enable button
+                                    btn.disabled = false;
+                                    btnText.textContent = 'Confirm Payment';
+                                    spinner.classList.add('d-none');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Checkout failed: Network error');
+                                // Re-enable button
+                                btn.disabled = false;
+                                btnText.textContent = 'Confirm Payment';
+                                spinner.classList.add('d-none');
+                            });
+                        }
+                        </script>
                     </div>
                 </div>
             </div>
