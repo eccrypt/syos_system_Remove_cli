@@ -1,5 +1,6 @@
 com\syos\service\RegistrationService.class
 com\syos\servlet\AsyncBillingServlet.class
+com\syos\service\ReportService.class
 com\syos\repository\ProductRepository.class
 com\syos\async\AsyncRequest.class
 com\syos\async\RequestQueue.class
@@ -17,7 +18,6 @@ com\syos\async\AsyncResponse.class
 com\syos\repository\UserRepository$1.class
 com\syos\model\Bill$BillBuilder.class
 com\syos\enums\TransactionType.class
-com\syos\service\WebReportService.class
 com\syos\async\AsyncResponse$Builder.class
 com\syos\dto\CustomerRegisterRequestDTO.class
 com\syos\servlet\LoginServlet.class
@@ -49,12 +49,12 @@ com\syos\servlet\InventoryServlet.class
 com\syos\singleton\InventoryManager.class
 com\syos\repository\ShelfStockRepository.class
 com\syos\servlet\AuthFilter.class
+com\syos\service\StoreBillingService.class
 com\syos\servlet\StoreBillingServlet.class
 com\syos\async\AsyncProcessorManager$QueueStats.class
 com\syos\dto\BillReportDTO.class
 com\syos\enums\DiscountType.class
 com\syos\factory\BillItemFactory.class
-com\syos\service\WebStoreBillingService.class
 com\syos\servlet\LogoutServlet.class
 com\syos\repository\StockBatchRepository.class
 com\syos\factory\UserFactory$1.class

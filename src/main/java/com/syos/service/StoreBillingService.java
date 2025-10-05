@@ -13,14 +13,14 @@ import com.syos.repository.ShelfStockRepository;
 import com.syos.strategy.DiscountPricingStrategy;
 import com.syos.strategy.NoDiscountStrategy;
 
-public class WebStoreBillingService {
+public class StoreBillingService {
     private final BillingRepository billingRepository;
     private final ProductRepository productRepository;
     private final ShelfStockRepository shelfStockRepository;
     private final BillItemFactory billItemFactory;
     private final StockService stockService;
 
-    public WebStoreBillingService() {
+    public StoreBillingService() {
         this.billingRepository = new BillingRepository();
         this.productRepository = new ProductRepository();
         this.shelfStockRepository = new ShelfStockRepository(productRepository);

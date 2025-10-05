@@ -14,10 +14,10 @@ import com.syos.repository.ReportRepository;
 import com.syos.repository.ShelfStockRepository;
 import com.syos.repository.StockBatchRepository;
 
-public class WebReportService {
+public class ReportService {
     private final ReportRepository reportRepository;
 
-    public WebReportService() {
+    public ReportService() {
         ProductRepository productRepository = new ProductRepository();
         ShelfStockRepository shelfStockRepository = new ShelfStockRepository(productRepository);
         StockBatchRepository stockBatchRepository = new StockBatchRepository();

@@ -14,14 +14,14 @@ import javax.servlet.http.HttpSession;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
 import com.syos.model.Product;
-import com.syos.service.WebStoreBillingService;
+import com.syos.service.StoreBillingService;
 
 @WebServlet("/billing")
 public class StoreBillingServlet extends HttpServlet {
-    private final WebStoreBillingService billingService;
+    private final StoreBillingService billingService;
 
     public StoreBillingServlet() {
-        this.billingService = new WebStoreBillingService();
+        this.billingService = new StoreBillingService();
     }
 
     @Override

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.syos.service.ProductService" %>
 <%@ page import="com.syos.service.StockService" %>
-<%@ page import="com.syos.service.WebStoreBillingService" %>
+<%@ page import="com.syos.service.StoreBillingService" %>
 <%@ page import="com.syos.singleton.InventoryManager" %>
 <%@ page import="com.syos.model.Product" %>
 <%@ page import="java.util.List" %>
@@ -10,7 +10,7 @@
 <%
     ProductService productService = new ProductService();
     StockService stockService = new StockService();
-    WebStoreBillingService billingService = new WebStoreBillingService();
+    StoreBillingService billingService = new StoreBillingService();
     InventoryManager inventoryManager = InventoryManager.getInstance(null);
 
     int totalProducts = productService.getAllProducts().size();

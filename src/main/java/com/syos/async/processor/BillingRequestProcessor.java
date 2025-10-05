@@ -3,16 +3,16 @@ package com.syos.async.processor;
 import com.syos.async.AsyncRequest;
 import com.syos.async.AsyncResponse;
 import com.syos.async.RequestProcessor;
-import com.syos.service.WebStoreBillingService;
+import com.syos.service.StoreBillingService;
 
 import java.util.Map;
 
 public class BillingRequestProcessor implements RequestProcessor {
 
-    private final WebStoreBillingService billingService;
+    private final StoreBillingService billingService;
 
     public BillingRequestProcessor() {
-        this.billingService = new WebStoreBillingService();
+        this.billingService = new StoreBillingService();
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AsyncLoadTest {
 
     private static final String BASE_URL = "http://localhost:8080/syos-billing-system";
-    private static final int NUM_CLIENTS = 2;
+    private static final int NUM_CLIENTS = 5;
     private static final int REQUESTS_PER_CLIENT = 10;
     private static final int DELAY_BETWEEN_REQUESTS_MS = 50;
 
@@ -103,18 +102,18 @@ public class AsyncLoadTest {
                     while ((line = br.readLine()) != null) {
                         response.append(line);
                     }
-                    System.out.println("Client " + clientId + " Request " + requestNum + ": SUCCESS");
+                    System.out.println("Client " + clientId + " Request " + requestNum + ": SUCCESS (Status: " + responseCode + ")");
                     successfulRequests.incrementAndGet();
                 }
             } else {
-                System.out.println("Client " + clientId + " Request " + requestNum + ": HTTP " + responseCode);
+                System.out.println("Client " + clientId + " Request " + requestNum + ": FAILED (Status: " + responseCode + ")");
                 failedRequests.incrementAndGet();
             }
 
             conn.disconnect();
 
         } catch (IOException e) {
-            System.out.println("Client " + clientId + " Request " + requestNum + ": FAILED - " + e.getMessage());
+            System.out.println("Client " + clientId + " Request " + requestNum + ": FAILED (Exception: " + e.getMessage() + ")");
             failedRequests.incrementAndGet();
         }
     }

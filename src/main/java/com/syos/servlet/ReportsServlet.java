@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.syos.dto.BillReportDTO;
 import com.syos.dto.ProductStockReportItemDTO;
-import com.syos.service.WebReportService;
+import com.syos.service.ReportService;
 
 @WebServlet("/reports")
 public class ReportsServlet extends HttpServlet {
-    private final WebReportService reportService;
+    private final ReportService reportService;
 
     public ReportsServlet() {
-        this.reportService = new WebReportService();
+        this.reportService = new ReportService();
     }
 
     @Override

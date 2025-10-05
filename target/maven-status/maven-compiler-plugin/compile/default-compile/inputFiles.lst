@@ -5,8 +5,6 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Bill.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\AuthenticationService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\dto\ReportDTOMapper.java
-C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\WebReportService.java
-C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\WebStoreBillingService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\StockBatch.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\factory\UserFactory.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\repository\BillingRepository.java
@@ -21,10 +19,12 @@ C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syo
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\ExpiryAwareFifoStrategy.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\observer\StockObserver.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\ProductService.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\StoreBillingService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\StockService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\repository\ReportRepository.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\strategy\DiscountPricingStrategy.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\async\RequestQueue.java
+C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\ReportService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\service\CustomerRegistrationService.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\config\ConfigLoader.java
 C:\Users\rumai\OneDrive\Desktop\New folder (2)\syos_system\src\main\java\com\syos\model\Admin.java
