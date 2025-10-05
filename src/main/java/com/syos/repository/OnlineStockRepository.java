@@ -138,7 +138,7 @@ public class OnlineStockRepository {
 	}
 
 	public List<String> getAllProductCodes() {
-		String sql = "SELECT DISTINCT product_code FROM online_stock";
+		String sql = "SELECT product_code, SUM(quantity) as total_quantity FROM online_stock GROUP BY product_code HAVING SUM(quantity) > 0";
 		List<String> productCodes = new ArrayList<>();
 		try (Connection connection = DatabaseManager.getInstance().getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -153,33 +153,4 @@ public class OnlineStockRepository {
 		return productCodes;
 	}
 
-	public OnlineStock findByCode(String productCode) {
-		String sql = """
-				SELECT os.product_code, os.batch_id, os.quantity, os.expiry_date
-				FROM online_stock os
-				WHERE os.product_code = ? AND os.quantity > 0
-				ORDER BY os.expiry_date ASC, os.batch_id ASC
-				LIMIT 1
-				""";
-		try (Connection connection = DatabaseManager.getInstance().getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-			preparedStatement.setString(1, productCode);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				Product product = productRepository.findByCode(resultSet.getString("product_code"));
-				if (product == null) {
-					throw new RuntimeException("Data inconsistency: Product " + resultSet.getString("product_code")
-							+ " referenced by online stock entry (batch " + resultSet.getInt("batch_id")
-							+ ") not found in product catalog.");
-				}
-				return new OnlineStock(product, resultSet.getInt("quantity"), resultSet.getInt("batch_id"),
-						resultSet.getDate("expiry_date").toLocalDate());
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException("Error finding single online stock entry for product: " + productCode, e);
-		}
-		return null;
-	}
 }

@@ -15,15 +15,17 @@ import com.syos.factory.BillItemFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
 import com.syos.model.Product;
+import com.syos.repository.BillingRepository;
 import com.syos.service.ProductService;
-import com.syos.service.StoreBillingService;
+import com.syos.service.StockService;
 import com.syos.strategy.DiscountPricingStrategy;
 import com.syos.strategy.NoDiscountStrategy;
 
 @WebServlet("/checkout")
 public class CustomerCheckoutServlet extends HttpServlet {
     private final ProductService productService = new ProductService();
-    private final StoreBillingService billingService = new StoreBillingService();
+    private final BillingRepository billingRepository = new BillingRepository();
+    private final StockService stockService = new StockService();
     private final BillItemFactory billItemFactory = new BillItemFactory(new DiscountPricingStrategy(new NoDiscountStrategy()));
 
     @Override
@@ -80,8 +82,21 @@ public class CustomerCheckoutServlet extends HttpServlet {
         }
 
         try {
-            // Process payment
-            Bill bill = billingService.processPayment(billItems, total);
+            // Create bill for customer checkout
+            int serialNumber = billingRepository.nextSerial();
+            Bill bill = new Bill.BillBuilder(serialNumber, billItems)
+                    .withCashTendered(total)
+                    .withTransactionType("ONLINE")
+                    .build();
+
+            // Save bill to database
+            billingRepository.save(bill);
+
+            // Deduct from online stock instead of shelf
+            for (BillItem item : billItems) {
+                stockService.deductFromOnline(item.getProduct().getCode(), item.getQuantity());
+            }
+
             session.removeAttribute("cart"); // Clear cart
 
             request.setAttribute("bill", bill);

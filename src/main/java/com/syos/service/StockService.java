@@ -34,6 +34,10 @@ public class StockService {
         return inventoryManager.getQuantityOnline(productCode);
     }
 
+    public void deductFromOnline(String productCode, int quantity) {
+        inventoryManager.deductFromOnline(productCode, quantity);
+    }
+
     public List<String> getProductCodesWithOnlineStock() {
         return inventoryManager.getOnlineRepository().getAllProductCodes().stream()
                 .filter(code -> getQuantityOnline(code) > 0)

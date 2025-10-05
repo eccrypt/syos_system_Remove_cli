@@ -24,18 +24,10 @@
         cart = new HashMap<String, Integer>();
         session.setAttribute("cart", cart);
     }
-%>
-
-    // Get cart from session
-    @SuppressWarnings("unchecked")
-    Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-    if (cart == null) {
-        cart = new HashMap<String, Integer>();
-        session.setAttribute("cart", cart);
-    }
 
     request.setAttribute("products", products);
 %>
+
 <!DOCTYPE html>
 <html>
 <head>

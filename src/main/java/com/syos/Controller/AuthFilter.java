@@ -87,7 +87,7 @@ public class AuthFilter implements Filter {
             return path.startsWith("/customer") ||
                     path.equals("/customerProducts.jsp") ||
                     path.equals("/cart.jsp") ||
-                    path.equals("/checkout.jsp") ||
+                    path.startsWith("/checkout") ||
                     path.equals("/customerBillReceipt.jsp") ||
                     path.startsWith("/addToCart") ||
                     path.startsWith("/updateCart") ||

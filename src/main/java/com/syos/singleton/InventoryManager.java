@@ -324,6 +324,55 @@ public class InventoryManager {
 		deductFromShelf(productCode, quantity);
 	}
 
+	public void deductFromOnline(String productCode, int quantity) {
+		if (productCode == null || productCode.trim().isEmpty()) {
+			throw new IllegalArgumentException("Product code cannot be empty.");
+		}
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity to deduct must be positive.");
+		}
+
+		int currentOnlineQuantity = onlineRepository.getQuantity(productCode);
+		if (currentOnlineQuantity < quantity) {
+			throw new IllegalArgumentException(
+					String.format("Insufficient stock online for %s. Available: %d, Requested: %d.", productCode,
+							currentOnlineQuantity, quantity));
+		}
+
+		int remainingToDeduct = quantity;
+		List<OnlineStock> onlineBatches = onlineRepository.getBatchesOnline(productCode);
+
+		while (remainingToDeduct > 0 && !onlineBatches.isEmpty()) {
+			// Use FIFO strategy: select the first batch (earliest expiry)
+			OnlineStock chosenOnlineBatch = onlineBatches.get(0);
+
+			int availableInOnlineBatch = chosenOnlineBatch.getQuantity();
+			int usedFromOnlineBatch = Math.min(availableInOnlineBatch, remainingToDeduct);
+
+			onlineRepository.deductQuantityFromBatchOnline(productCode, chosenOnlineBatch.getBatchId(),
+					usedFromOnlineBatch);
+			System.out.printf("Deducted %d units from online batch %d for %s.%n", usedFromOnlineBatch,
+					chosenOnlineBatch.getBatchId(), productCode);
+
+			chosenOnlineBatch.setQuantity(availableInOnlineBatch - usedFromOnlineBatch);
+
+			remainingToDeduct -= usedFromOnlineBatch;
+
+			if (chosenOnlineBatch.getQuantity() == 0) {
+				onlineBatches.remove(chosenOnlineBatch);
+				onlineRepository.removeBatchFromOnline(productCode, chosenOnlineBatch.getBatchId());
+			}
+		}
+
+		int remain = onlineRepository.getQuantity(productCode);
+		System.out.printf("Total deducted %d units of %s from online. Remaining online: %d.%n", quantity, productCode,
+				remain);
+
+		if (remain < 50) {
+			notifyLow(productCode, remain);
+		}
+	}
+
 	public List<StockBatch> getAllExpiringBatches(int daysThreshold) {
 		return batchRepository.findAllExpiringBatches(daysThreshold);
 	}
