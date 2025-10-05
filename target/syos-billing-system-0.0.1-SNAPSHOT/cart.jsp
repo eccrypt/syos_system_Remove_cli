@@ -31,6 +31,75 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Real-time updates via WebSocket
+        let websocket = null;
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = protocol + '//' + window.location.host + '/realtime-updates';
+
+            websocket = new WebSocket(wsUrl);
+
+            websocket.onopen = function(event) {
+                console.log('WebSocket connected');
+            };
+
+            websocket.onmessage = function(event) {
+                try {
+                    const update = JSON.parse(event.data);
+                    handleRealtimeUpdate(update);
+                } catch (e) {
+                    console.error('Error parsing WebSocket message:', e);
+                }
+            };
+
+            websocket.onclose = function(event) {
+                console.log('WebSocket disconnected, reconnecting...');
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            websocket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        function handleRealtimeUpdate(update) {
+            console.log('Received real-time update:', update);
+
+            switch(update.eventType) {
+                case 'STOCK_UPDATE':
+                    handleStockUpdate(update.data);
+                    break;
+                case 'ORDER_PROCESSED':
+                    handleOrderProcessed(update.data);
+                    break;
+                default:
+                    console.log('Unknown update type:', update.eventType);
+            }
+        }
+
+        function handleStockUpdate(data) {
+            // Check if cart has this product and stock became unavailable
+            console.log('Stock updated for product:', data.productCode, 'Online:', data.onlineQuantity);
+
+            if (data.onlineQuantity === 0) {
+                // Product is now out of stock, could show warning
+                alert('Warning: ' + data.productCode + ' is now out of stock!');
+            }
+        }
+
+        function handleOrderProcessed(data) {
+            // Another user bought this product, stock reduced
+            console.log('Order processed for product:', data.productCode, 'Quantity sold:', data.quantitySold);
+            // Could refresh cart or show notification
+        }
+
+        // Connect to WebSocket when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            connectWebSocket();
+        });
+    </script>
 </head>
 <body class="bg-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">

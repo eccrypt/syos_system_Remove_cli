@@ -12,6 +12,7 @@ import com.syos.repository.ProductRepository;
 import com.syos.repository.ShelfStockRepository;
 import com.syos.strategy.DiscountPricingStrategy;
 import com.syos.strategy.NoDiscountStrategy;
+import com.syos.websocket.RealtimeBroadcastService;
 
 public class StoreBillingService {
     private final BillingRepository billingRepository;
@@ -19,6 +20,7 @@ public class StoreBillingService {
     private final ShelfStockRepository shelfStockRepository;
     private final BillItemFactory billItemFactory;
     private final StockService stockService;
+    private final RealtimeBroadcastService broadcastService;
 
     public StoreBillingService() {
         this.billingRepository = new BillingRepository();
@@ -26,6 +28,7 @@ public class StoreBillingService {
         this.shelfStockRepository = new ShelfStockRepository(productRepository);
         this.billItemFactory = new BillItemFactory(new DiscountPricingStrategy(new NoDiscountStrategy()));
         this.stockService = new StockService();
+        this.broadcastService = RealtimeBroadcastService.getInstance();
     }
 
     public BillItem addItemToBill(String productCode, int quantity) throws Exception {
@@ -69,6 +72,8 @@ public class StoreBillingService {
 
         for (BillItem item : billItems) {
             stockService.removeQuantityFromShelf(item.getProduct().getCode(), item.getQuantity());
+            // Broadcast order processed update
+            broadcastService.broadcastOrderProcessed(item.getProduct().getCode(), item.getQuantity());
         }
 
         return billingRepository.findById(bill.getId());

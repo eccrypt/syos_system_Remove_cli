@@ -6,24 +6,39 @@ import java.util.stream.Collectors;
 
 import com.syos.model.StockBatch;
 import com.syos.singleton.InventoryManager;
+import com.syos.websocket.RealtimeBroadcastService;
 
 public class StockService {
     private final InventoryManager inventoryManager;
+    private final RealtimeBroadcastService broadcastService;
 
     public StockService() {
         this.inventoryManager = InventoryManager.getInstance(null);
+        this.broadcastService = RealtimeBroadcastService.getInstance();
     }
 
     public void receiveStock(String productCode, LocalDate purchaseDate, LocalDate expiryDate, int quantity) {
         inventoryManager.receiveStock(productCode, purchaseDate, expiryDate, quantity);
+        // Broadcast stock update
+        int shelfQty = getQuantityOnShelf(productCode);
+        int onlineQty = getQuantityOnline(productCode);
+        broadcastService.broadcastStockUpdate(productCode, shelfQty, onlineQty);
     }
 
     public void moveToShelf(String productCode, int quantity) {
         inventoryManager.moveToShelf(productCode, quantity);
+        // Broadcast stock update
+        int shelfQty = getQuantityOnShelf(productCode);
+        int onlineQty = getQuantityOnline(productCode);
+        broadcastService.broadcastStockUpdate(productCode, shelfQty, onlineQty);
     }
 
     public void moveToOnline(String productCode, int quantity) {
         inventoryManager.moveToOnline(productCode, quantity);
+        // Broadcast stock update
+        int shelfQty = getQuantityOnShelf(productCode);
+        int onlineQty = getQuantityOnline(productCode);
+        broadcastService.broadcastStockUpdate(productCode, shelfQty, onlineQty);
     }
 
     public int getQuantityOnShelf(String productCode) {
@@ -36,6 +51,10 @@ public class StockService {
 
     public void deductFromOnline(String productCode, int quantity) {
         inventoryManager.deductFromOnline(productCode, quantity);
+        // Broadcast stock update
+        int shelfQty = getQuantityOnShelf(productCode);
+        int onlineQty = getQuantityOnline(productCode);
+        broadcastService.broadcastStockUpdate(productCode, shelfQty, onlineQty);
     }
 
     public List<String> getProductCodesWithOnlineStock() {
@@ -78,6 +97,10 @@ public class StockService {
 
     public void removeQuantityFromShelf(String productCode, int quantity) {
         inventoryManager.removeQuantityFromShelf(productCode, quantity);
+        // Broadcast stock update
+        int shelfQty = getQuantityOnShelf(productCode);
+        int onlineQty = getQuantityOnline(productCode);
+        broadcastService.broadcastStockUpdate(productCode, shelfQty, onlineQty);
     }
 
     public List<StockBatch> getExpiringBatchesForProduct(String productCode, int days) {

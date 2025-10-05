@@ -35,6 +35,109 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Real-time updates via WebSocket
+        let websocket = null;
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = protocol + '//' + window.location.host + '/realtime-updates';
+
+            websocket = new WebSocket(wsUrl);
+
+            websocket.onopen = function(event) {
+                console.log('WebSocket connected');
+            };
+
+            websocket.onmessage = function(event) {
+                try {
+                    const update = JSON.parse(event.data);
+                    handleRealtimeUpdate(update);
+                } catch (e) {
+                    console.error('Error parsing WebSocket message:', e);
+                }
+            };
+
+            websocket.onclose = function(event) {
+                console.log('WebSocket disconnected, reconnecting...');
+                setTimeout(connectWebSocket, 3000); // Reconnect after 3 seconds
+            };
+
+            websocket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        function handleRealtimeUpdate(update) {
+            console.log('Received real-time update:', update);
+
+            switch(update.eventType) {
+                case 'STOCK_UPDATE':
+                    handleStockUpdate(update.data);
+                    break;
+                case 'PRODUCT_ADDED':
+                    handleProductAdded(update.data);
+                    break;
+                case 'PRODUCT_UPDATED':
+                    handleProductUpdated(update.data);
+                    break;
+                case 'ORDER_PROCESSED':
+                    handleOrderProcessed(update.data);
+                    break;
+                default:
+                    console.log('Unknown update type:', update.eventType);
+            }
+        }
+
+        function handleStockUpdate(data) {
+            // Update stock quantities in the UI
+            const productCards = document.querySelectorAll('.card');
+            productCards.forEach(card => {
+                const codeElement = card.querySelector('.card-text');
+                if (codeElement && codeElement.textContent.includes('Code: ' + data.productCode)) {
+                    // This card is for the updated product
+                    // You could add visual indicators or update availability status
+                    console.log('Stock updated for product:', data.productCode, 'Online:', data.onlineQuantity);
+                }
+            });
+        }
+
+        function handleProductAdded(data) {
+            // Refresh the page to show the new product
+            console.log('New product added:', data.productCode);
+            // Optionally refresh the page or add the product to the UI
+            location.reload();
+        }
+
+        function handleProductUpdated(data) {
+            // Update product information in the UI
+            const productCards = document.querySelectorAll('.card');
+            productCards.forEach(card => {
+                const codeElement = card.querySelector('.card-text');
+                if (codeElement && codeElement.textContent.includes('Code: ' + data.productCode)) {
+                    // Update the product name and price
+                    const titleElement = card.querySelector('.card-title');
+                    const priceElement = card.querySelector('.card-text.fw-bold');
+
+                    if (titleElement) titleElement.textContent = data.productName;
+                    if (priceElement) priceElement.textContent = 'Rs. ' + data.price;
+
+                    console.log('Product updated:', data.productCode);
+                }
+            });
+        }
+
+        function handleOrderProcessed(data) {
+            // Show notification that stock has been reduced
+            console.log('Order processed for product:', data.productCode, 'Quantity sold:', data.quantitySold);
+            // You could show a toast notification or update stock indicators
+        }
+
+        // Connect to WebSocket when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            connectWebSocket();
+        });
+    </script>
 </head>
 <body class="bg-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">

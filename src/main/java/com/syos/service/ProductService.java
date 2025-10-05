@@ -6,9 +6,11 @@ import java.util.List;
 import com.syos.model.Product;
 import com.syos.repository.ProductRepository;
 import com.syos.util.CommonVariables;
+import com.syos.websocket.RealtimeBroadcastService;
 
 public class ProductService {
 	private final ProductRepository productRepository = new ProductRepository();
+	private final RealtimeBroadcastService broadcastService = RealtimeBroadcastService.getInstance();
 
 	public Product addProduct(String code, String name, double price) {
 		if (code.length() > CommonVariables.MAX_CODE_LENGTH) {
@@ -26,22 +28,29 @@ public class ProductService {
 
 		productRepository.add(poduct);
 
+		// Broadcast product added
+		broadcastService.broadcastProductAdded(code, name, price);
+
 		return poduct;
 	}
 	 public Product updateProductName(String code, String newName) {
-	        if (newName.length() > CommonVariables.MAX_PRODUCT_NAME_LENGTH) {
-	            throw new IllegalArgumentException("Product name must be at most 100 characters");
-	        }
+	     if (newName.length() > CommonVariables.MAX_PRODUCT_NAME_LENGTH) {
+	         throw new IllegalArgumentException("Product name must be at most 100 characters");
+	     }
 
-	        Product existingProduct = productRepository.findByCode(code);
-	        if (existingProduct == null) {
-	            throw new IllegalArgumentException("Product with code " + code + " not found.");
-	        }
+	     Product existingProduct = productRepository.findByCode(code);
+	     if (existingProduct == null) {
+	         throw new IllegalArgumentException("Product with code " + code + " not found.");
+	     }
 
-	        existingProduct.setName(newName);
-	        productRepository.update(existingProduct);
-	        return existingProduct;
-	    }
+	     existingProduct.setName(newName);
+	     productRepository.update(existingProduct);
+
+	     // Broadcast product updated
+	     broadcastService.broadcastProductUpdated(code, newName, existingProduct.getPrice());
+
+	     return existingProduct;
+	 }
 
 	    public Product updateProduct(String code, String newName, double newPrice) {
 	        if (newName.length() > CommonVariables.MAX_PRODUCT_NAME_LENGTH) {
@@ -56,6 +65,10 @@ public class ProductService {
 	        existingProduct.setName(newName);
 	        existingProduct.setPrice(newPrice);
 	        productRepository.update(existingProduct);
+
+	        // Broadcast product updated
+	        broadcastService.broadcastProductUpdated(code, newName, newPrice);
+
 	        return existingProduct;
 	    }
 

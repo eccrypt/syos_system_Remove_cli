@@ -24,6 +24,7 @@ com\syos\Controller\LogoutServlet.class
 com\syos\repository\UserRepository$1.class
 com\syos\model\Bill$BillBuilder.class
 com\syos\enums\TransactionType.class
+com\syos\websocket\RealtimeBroadcastService$OrderUpdate.class
 com\syos\async\AsyncResponse$Builder.class
 com\syos\dto\CustomerRegisterRequestDTO.class
 com\syos\strategy\NoDiscountStrategy.class
@@ -37,6 +38,7 @@ com\syos\async\processor\BillingRequestProcessor.class
 com\syos\Controller\LoginServlet.class
 com\syos\model\OnlineStock.class
 com\syos\strategy\ShelfStrategy.class
+com\syos\websocket\RealtimeBroadcastService$RealtimeUpdate.class
 com\syos\factory\UserFactory.class
 com\syos\enums\UserType.class
 com\syos\async\RequestProcessor.class
@@ -44,12 +46,15 @@ com\syos\async\processor\CustomerCheckoutRequestProcessor.class
 com\syos\util\StockBatchIterator.class
 com\syos\repository\ReportRepository.class
 com\syos\observer\StockObserver.class
+com\syos\websocket\RealtimeBroadcastService$StockUpdate.class
+com\syos\websocket\RealtimeBroadcastService.class
 com\syos\service\StockService.class
 com\syos\Controller\CustomerCheckoutServlet.class
 com\syos\db\DatabaseManager.class
 com\syos\Controller\InventoryServlet.class
 com\syos\strategy\DiscountStrategy.class
 com\syos\strategy\ExpiryAwareFifoStrategy.class
+com\syos\websocket\RealtimeBroadcastService$ProductUpdate.class
 com\syos\strategy\PricingStrategy.class
 com\syos\service\AuthenticationService.class
 com\syos\async\WorkerPool.class
@@ -58,6 +63,7 @@ com\syos\service\StockAlertService.class
 com\syos\Controller\AsyncCustomerCheckoutServlet.class
 com\syos\singleton\InventoryManager.class
 com\syos\repository\ShelfStockRepository.class
+com\syos\websocket\RealtimeBroadcastService$InventoryUpdate.class
 com\syos\service\StoreBillingService.class
 com\syos\async\AsyncProcessorManager$QueueStats.class
 com\syos\dto\BillReportDTO.class
@@ -69,6 +75,7 @@ com\syos\factory\UserFactory$1.class
 com\syos\repository\CustomerRepository.class
 com\syos\model\Customer.class
 com\syos\model\ShelfStock.class
+com\syos\websocket\RealtimeWebSocketEndpoint.class
 com\syos\model\User.class
 com\syos\async\WorkerPool$Worker.class
 com\syos\service\CustomerRegistrationService.class
