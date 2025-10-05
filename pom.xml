@@ -108,6 +108,7 @@
 				<configuration>
 					<path>/</path>
 					<port>8080</port>
+					<stopKey>stopKey</stopKey>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -115,7 +116,8 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<mainClass>com.syos.SyosSystem</mainClass>
+					<mainClass>com.test.async.AsyncLoadTest</mainClass>
+					<classpathScope>test</classpathScope>
 				</configuration>
 			</plugin>
 		</plugins>
